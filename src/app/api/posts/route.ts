@@ -31,9 +31,9 @@ export async function GET(req: Request) {
             }
         }
 
-        const postsWithStatus = posts.map((post: any) => ({
+        const postsWithStatus = posts.map((post) => ({
             ...post,
-            isFavorited: userFavorites.includes(post._id.toString())
+            isFavorited: userFavorites.includes((post._id as { toString: () => string }).toString())
         }));
 
         return NextResponse.json(postsWithStatus);

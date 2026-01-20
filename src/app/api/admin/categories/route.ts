@@ -3,8 +3,13 @@ import { checkAdminAuth } from "@/lib/adminAuth";
 import connectToDatabase from "@/lib/db";
 import Category from "@/models/Category";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
     try {
+        const auth = await checkAdminAuth();
+        if (!auth.authorized) return auth.response;
+
         await connectToDatabase();
         const categories = await Category.find({}).sort({ name: 1 });
         return NextResponse.json(categories);
