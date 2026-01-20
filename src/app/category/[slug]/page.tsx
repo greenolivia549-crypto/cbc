@@ -1,6 +1,7 @@
+import connectToDatabase from "@/lib/db";
+import Post from "@/models/Post";
 import Link from "next/link";
 import Image from "next/image";
-import { DUMMY_POSTS } from "@/lib/dummyData";
 import { FaCalendar, FaUser, FaTag } from "react-icons/fa";
 import BackButton from "@/components/common/BackButton";
 
@@ -11,12 +12,18 @@ export default async function CategoryPage({
 }) {
     const { slug } = await params;
 
+    await connectToDatabase();
 
+    // Fetch posts by category (case-insensitive)
+    // We assume the slug in the URL maps to the category name in the DB
+    // Or we could have querying by 'category' field.
+    // Given the previous setup, we should probably query by category name regex.
 
-    // Filter posts
-    const posts = DUMMY_POSTS.filter(
-        (post) => post.category.toLowerCase() === slug.toLowerCase()
-    );
+    // Also only show published posts for safety, though not strictly asked, it's consistent.
+    const posts = await Post.find({
+        category: { $regex: new RegExp(`^${slug}$`, "i") },
+        published: true
+    }).sort({ createdAt: -1 });
 
     return (
         <div className="container mx-auto px-4 py-12 min-h-screen">

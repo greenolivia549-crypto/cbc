@@ -3,7 +3,6 @@ import { checkAdminAuth } from "@/lib/adminAuth";
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
 import User from "@/models/User";
-import { DUMMY_POSTS } from "@/lib/dummyData";
 
 export async function GET() {
     try {
@@ -12,10 +11,8 @@ export async function GET() {
 
         await connectToDatabase();
 
-        // 1. Total Posts (DB + Dummy)
-        const dbPostsCount = await Post.countDocuments();
-        const dummyPostsCount = DUMMY_POSTS.length;
-        const totalPosts = dbPostsCount + dummyPostsCount;
+        // 1. Total Posts (DB Only)
+        const totalPosts = await Post.countDocuments();
 
         // 2. Total Users
         const totalUsers = await User.countDocuments();

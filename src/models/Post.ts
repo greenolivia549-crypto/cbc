@@ -38,6 +38,10 @@ const PostSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        published: {
+            type: Boolean,
+            default: true,
+        },
         seoTitle: {
             type: String,
             maxlength: [60, "SEO Title cannot exceed 60 characters"],
@@ -56,5 +60,11 @@ const PostSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
+// Prevent mongoose from creating a new model if it already exists (Hot Reload fix)
+// Delete to force recompile if schema changed
+if (process.env.NODE_ENV === "development" && mongoose.models.Post) {
+    delete mongoose.models.Post;
+}
 
 export default mongoose.models.Post || mongoose.model("Post", PostSchema);

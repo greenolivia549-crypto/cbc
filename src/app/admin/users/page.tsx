@@ -46,7 +46,7 @@ export default function UsersPage() {
             if (res.ok) {
                 setUsers((prev) =>
                     prev.map((user) =>
-                        user._id === userId ? { ...user, role: newRole as any } : user
+                        user._id === userId ? { ...user, role: newRole as "user" | "admin" | "developer" } : user
                     )
                 );
                 alert("User role updated successfully!");
@@ -106,10 +106,10 @@ export default function UsersPage() {
                                             value={user.role}
                                             onChange={(e) => handleRoleChange(user._id, e.target.value)}
                                             className={`text-xs font-medium px-2 py-1 rounded-full border-none focus:ring-2 focus:ring-green-500 cursor-pointer ${user.role === "admin"
-                                                    ? "bg-purple-100 text-purple-800"
-                                                    : user.role === "developer"
-                                                        ? "bg-blue-100 text-blue-800"
-                                                        : "bg-green-100 text-green-800"
+                                                ? "bg-purple-100 text-purple-800"
+                                                : user.role === "developer"
+                                                    ? "bg-blue-100 text-blue-800"
+                                                    : "bg-green-100 text-green-800"
                                                 }`}
                                         >
                                             <option value="user">User</option>

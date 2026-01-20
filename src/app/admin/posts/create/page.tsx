@@ -65,8 +65,7 @@ export default function CreatePostPage() {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (published: boolean) => {
         setLoading(true);
         setError("");
 
@@ -74,7 +73,7 @@ export default function CreatePostPage() {
             const res = await fetch("/api/admin/posts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ ...formData, published })
             });
 
             const data = await res.json();
@@ -105,7 +104,7 @@ export default function CreatePostPage() {
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form className="space-y-8">
                 {/* Main Editor */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -203,13 +202,24 @@ export default function CreatePostPage() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
                             <h3 className="font-bold text-gray-900">Publishing</h3>
 
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-900/20 disabled:opacity-70 disabled:cursor-not-allowed"
-                            >
-                                {loading ? "Publishing..." : <><FaSave /> Publish Post</>}
-                            </button>
+                            <div className="space-y-3">
+                                <button
+                                    type="button"
+                                    onClick={() => handleSubmit(true)}
+                                    disabled={loading}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-900/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                                >
+                                    {loading ? "Publishing..." : <><FaSave /> Publish Post</>}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleSubmit(false)}
+                                    disabled={loading}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                                >
+                                    {loading ? "Saving..." : "Save as Draft"}
+                                </button>
+                            </div>
                         </div>
 
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">

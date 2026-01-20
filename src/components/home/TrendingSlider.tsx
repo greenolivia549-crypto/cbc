@@ -59,7 +59,7 @@ export default function TrendingSlider() {
             nextSlide();
         }, 5000);
         return () => clearInterval(timer);
-    }, [nextSlide]);
+    }, [nextSlide, current]);
 
     if (!articles || articles.length === 0 || !articles[current]) {
         return null; // Or a loading skeleton

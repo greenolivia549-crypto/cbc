@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FaUserCircle, FaChevronDown } from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Category {
     _id: string;
@@ -16,6 +16,7 @@ export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
+    const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -32,6 +33,23 @@ export default function Header() {
 
         fetchCategories();
     }, []);
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsMenuOpen(false);
+            }
+        }
+
+        if (isMenuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isMenuOpen]);
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground shadow-md">
@@ -101,7 +119,7 @@ export default function Header() {
 
                     <div className="flex items-center gap-2">
                         {session ? (
-                            <div className="relative">
+                            <div className="relative" ref={menuRef}>
                                 <button
                                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                                     className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"

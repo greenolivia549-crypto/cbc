@@ -38,7 +38,7 @@ export async function PUT(
         if (!auth.authorized) return auth.response;
 
         const { id } = await params;
-        const { title, slug, content, excerpt, image, category, seoTitle, seoDescription, keywords, featured } = await req.json();
+        const { title, slug, content, excerpt, image, category, seoTitle, seoDescription, keywords, featured, published } = await req.json();
 
         await connectToDatabase();
 
@@ -63,7 +63,8 @@ export async function PUT(
                 seoDescription,
 
                 keywords,
-                featured
+                featured,
+                published
             },
             { new: true }
         );

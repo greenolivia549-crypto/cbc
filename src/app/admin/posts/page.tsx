@@ -13,6 +13,7 @@ interface Post {
         name: string;
     };
     createdAt: string;
+    published: boolean;
 }
 
 export default function AdminPostsPage() {
@@ -82,6 +83,7 @@ export default function AdminPostsPage() {
                             <th className="px-6 py-4 font-bold text-gray-700 text-sm">Title</th>
                             <th className="px-6 py-4 font-bold text-gray-700 text-sm">Category</th>
                             <th className="px-6 py-4 font-bold text-gray-700 text-sm">Author</th>
+                            <th className="px-6 py-4 font-bold text-gray-700 text-sm">Status</th>
                             <th className="px-6 py-4 font-bold text-gray-700 text-sm">Date</th>
                             <th className="px-6 py-4 font-bold text-gray-700 text-sm text-right">Actions</th>
                         </tr>
@@ -101,6 +103,14 @@ export default function AdminPostsPage() {
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-600">
                                         {post.author?.name || "Admin"}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${post.published
+                                                ? "bg-green-50 text-green-700"
+                                                : "bg-gray-100 text-gray-600"
+                                            }`}>
+                                            {post.published ? "Published" : "Draft"}
+                                        </span>
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-500">
                                         {new Date(post.createdAt).toLocaleDateString()}

@@ -8,7 +8,7 @@ export async function POST(req: Request) {
         const auth = await checkAdminAuth();
         if (!auth.authorized) return auth.response;
 
-        const { title, slug, content, excerpt, image, category, seoTitle, seoDescription, keywords, featured } = await req.json();
+        const { title, slug, content, excerpt, image, category, seoTitle, seoDescription, keywords, featured, published } = await req.json();
 
         // Basic Validation
         if (!title || !slug || !content || !category) {
@@ -35,6 +35,7 @@ export async function POST(req: Request) {
             keywords,
 
             featured,
+            published,
             author: auth.session?.user.id
         });
 
