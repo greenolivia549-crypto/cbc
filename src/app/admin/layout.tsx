@@ -41,7 +41,7 @@ export default function AdminLayout({
         { name: "All Posts", href: "/admin/posts", icon: FaList },
         { name: "New Post", href: "/admin/posts/create", icon: FaPen },
         { name: "Categories", href: "/admin/categories", icon: FaTag }, // Added Categories
-        { name: "Users (Soon)", href: "#", icon: FaUsers },
+        { name: "Users", href: "/admin/users", icon: FaUsers },
     ];
 
     return (
