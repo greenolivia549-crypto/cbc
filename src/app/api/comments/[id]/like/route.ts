@@ -6,7 +6,7 @@ import Comment from "@/models/Comment";
 
 export async function POST(
     req: Request,
-    { params }: { params: Promise<{ commentId: string }> }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -14,10 +14,10 @@ export async function POST(
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        const { commentId } = await params;
+        const { id } = await params;
         await connectToDatabase();
 
-        const comment = await Comment.findById(commentId);
+        const comment = await Comment.findById(id);
         if (!comment) {
             return NextResponse.json({ message: "Comment not found" }, { status: 404 });
         }
