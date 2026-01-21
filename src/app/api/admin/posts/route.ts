@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { checkAdminAuth } from "@/lib/adminAuth";
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
+import "@/models/User"; // Ensure User model is registered for population
 
 export async function POST(req: Request) {
     try {

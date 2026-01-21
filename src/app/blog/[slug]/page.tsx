@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
+import "@/models/User"; // Ensure User model is registered for population
 import Interactions from "@/components/blog/Interactions";
 import { FaCalendar, FaUser } from "react-icons/fa";
 

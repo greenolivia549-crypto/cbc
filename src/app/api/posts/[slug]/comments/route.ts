@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import connectToDatabase from "@/lib/db";
 import Comment from "@/models/Comment";
 import Post from "@/models/Post";
+import "@/models/User"; // Ensure User model is registered for population
 import { DUMMY_POSTS } from "@/lib/dummyData";
 
 export async function GET(

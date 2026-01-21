@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
+import "@/models/User"; // Ensure User model is registered for population
 import { FaCalendar, FaUser } from "react-icons/fa";
 
 interface Post {
