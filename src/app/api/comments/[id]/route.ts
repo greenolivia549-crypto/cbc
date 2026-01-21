@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import connectToDatabase from "@/lib/db";
 import Comment from "@/models/Comment";
-import Post from "@/models/Post"; // Need to update post if necessary, though comment usually just references post
+
 
 export async function DELETE(
     req: Request,

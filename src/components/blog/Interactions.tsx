@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { FaComment, FaPaperPlane, FaTrash } from "react-icons/fa";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import LikeButton from "@/components/common/LikeButton";
 import CommentLikeButton from "@/components/blog/CommentLikeButton";
 import LoginPromptModal from "@/components/common/LoginPromptModal";
