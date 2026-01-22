@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FaSave, FaArrowLeft, FaSearch } from "react-icons/fa";
+import { FaSave, FaArrowLeft, FaSearch, FaCloudUploadAlt, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 
 interface Category {
@@ -16,6 +16,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
@@ -35,42 +36,76 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     });
 
     // Fetch existing post data and categories
+    // Fetch existing post data and categories
     useEffect(() => {
         const fetchData = async () => {
+            // Fetch Categories
             try {
-                // Fetch Categories
                 const catRes = await fetch("/api/admin/categories");
                 if (catRes.ok) {
                     const catData = await catRes.json();
                     setCategories(catData);
                 }
+            } catch (e) { console.error("Failed to load categories") }
 
-                // Fetch Post
-                const res = await fetch(`/api/admin/posts/${id}`);
-                if (!res.ok) throw new Error("Failed to fetch post");
-                const data = await res.json();
+            // Check for local draft first
+            const draftKey = `admin_post_edit_draft_${id}`;
+            const savedDraft = localStorage.getItem(draftKey);
+            let draftLoaded = false;
 
-                setFormData({
-                    title: data.title,
-                    slug: data.slug,
-                    excerpt: data.excerpt,
-                    category: data.category,
-                    image: data.image,
-                    content: data.content,
-                    seoTitle: data.seoTitle || "",
-                    seoDescription: data.seoDescription || "",
-                    keywords: data.keywords || "",
-                    featured: data.featured || false
-                });
-            } catch {
-                setError("Could not load post data.");
-            } finally {
-                setFetching(false);
+            if (savedDraft) {
+                try {
+                    const parsed = JSON.parse(savedDraft);
+                    if (confirm("Found an unsaved draft for this post. Restore?")) {
+                        setFormData(parsed);
+                        draftLoaded = true;
+                        setFetching(false);
+                    } else {
+                        localStorage.removeItem(draftKey);
+                    }
+                } catch (e) { console.error("Failed to parse draft", e); }
+            }
+
+            if (!draftLoaded) {
+                try {
+                    // Fetch Post
+                    const res = await fetch(`/api/admin/posts/${id}`);
+                    if (!res.ok) throw new Error("Failed to fetch post");
+                    const data = await res.json();
+
+                    setFormData({
+                        title: data.title,
+                        slug: data.slug,
+                        excerpt: data.excerpt,
+                        category: data.category,
+                        image: data.image,
+                        content: data.content,
+                        seoTitle: data.seoTitle || "",
+                        seoDescription: data.seoDescription || "",
+                        keywords: data.keywords || "",
+                        featured: data.featured || false
+                    });
+                } catch {
+                    setError("Could not load post data.");
+                } finally {
+                    setFetching(false);
+                }
             }
         };
 
         fetchData();
     }, [id]);
+
+    // Auto-save draft
+    useEffect(() => {
+        if (!fetching) { // Don't save while initial fetching
+            const timer = setTimeout(() => {
+                const draftKey = `admin_post_edit_draft_${id}`;
+                localStorage.setItem(draftKey, JSON.stringify(formData));
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [formData, id, fetching]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -83,6 +118,34 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         if (name === "title") {
             const autoSlug = value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
             setFormData(prev => ({ ...prev, slug: autoSlug }));
+        }
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        setError("");
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error("Upload failed");
+
+            const data = await res.json();
+            setFormData(prev => ({ ...prev, image: data.url }));
+        } catch (err) {
+            console.error(err);
+            setError("Failed to upload image");
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -104,6 +167,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
             }
 
             // Redirect back to list
+            localStorage.removeItem(`admin_post_edit_draft_${id}`);
             router.push("/admin/posts");
             router.refresh();
 
@@ -298,20 +362,57 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                             <h3 className="font-bold text-gray-900">Featured Image</h3>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Image URL</label>
-                                <input
-                                    type="url"
-                                    name="image"
-                                    value={formData.image}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
-                                    placeholder="https://..."
-                                />
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Image Source</label>
+
+                                {/* Tabs or simple switcher could be here, but let's just show both options or priority to upload */}
+                                <div className="space-y-4">
+                                    {/* Upload Button */}
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            id="imageUpload"
+                                            accept="image/*"
+                                            onChange={handleImageUpload}
+                                            className="hidden"
+                                            disabled={uploading}
+                                        />
+                                        <label
+                                            htmlFor="imageUpload"
+                                            className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors text-gray-600 hover:text-primary"
+                                        >
+                                            {uploading ? (
+                                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary"></div>
+                                            ) : (
+                                                <FaCloudUploadAlt className="text-xl" />
+                                            )}
+                                            <span className="font-medium text-sm">{uploading ? "Uploading..." : "Upload from Computer"}</span>
+                                        </label>
+                                    </div>
+
+                                    <div className="text-center text-xs text-gray-400 font-medium uppercase tracking-wider">- OR -</div>
+
+                                    <input
+                                        type="url"
+                                        name="image"
+                                        value={formData.image}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-sm"
+                                        placeholder="Paste Image URL..."
+                                    />
+                                </div>
                             </div>
 
                             {formData.image && (
-                                <div className="mt-2 aspect-video rounded-lg overflow-hidden bg-gray-100 border border-gray-200 relative">
+                                <div className="mt-2 aspect-video rounded-lg overflow-hidden bg-gray-100 border border-gray-200 relative group">
                                     <Image src={formData.image} alt="Preview" fill className="object-cover" unoptimized />
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData(prev => ({ ...prev, image: "" }))}
+                                        className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-red-600"
+                                        title="Remove Image"
+                                    >
+                                        <FaTrash size={12} />
+                                    </button>
                                 </div>
                             )}
 

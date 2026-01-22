@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { FaUserCircle, FaChevronDown } from "react-icons/fa";
+import { FaUserCircle, FaChevronDown, FaSearch } from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 interface Category {
     _id: string;
@@ -13,9 +14,11 @@ interface Category {
 
 export default function Header() {
     const { data: session } = useSession();
+    const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -50,6 +53,14 @@ export default function Header() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isMenuOpen]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+            setSearchQuery("");
+        }
+    };
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground shadow-md">
@@ -106,16 +117,26 @@ export default function Header() {
                     <Link href="/about" className="hover:text-green-200 transition-colors">
                         About Us
                     </Link>
-                    <Link href="/faqs" className="hover:text-green-200 transition-colors">
-                        FAQs
-                    </Link>
-                    <Link href="/contact" className="hover:text-green-200 transition-colors">
-                        Contact
-                    </Link>
+
+
                 </nav>
 
                 {/* Actions */}
                 <div className="flex items-center gap-4">
+
+                    {/* Search Bar */}
+                    <form onSubmit={handleSearch} className="hidden md:flex items-center relative">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="bg-white/10 border border-white/20 text-white placeholder-green-200 text-sm rounded-full px-4 py-1.5 focus:outline-none focus:bg-white/20 transition-colors w-48 pr-8"
+                        />
+                        <button type="submit" className="absolute right-3 text-green-200 hover:text-white transition-colors">
+                            <FaSearch size={14} />
+                        </button>
+                    </form>
 
                     <div className="flex items-center gap-2">
                         {session ? (

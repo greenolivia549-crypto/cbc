@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaFire, FaEnvelope } from "react-icons/fa";
+import { FaFire } from "react-icons/fa";
 
 interface Post {
     _id: string;
@@ -48,9 +48,6 @@ export default function SideMenu() {
                                     <span className="text-gray-700 font-medium group-hover:text-primary transition-colors line-clamp-1">
                                         {post.title}
                                     </span>
-                                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-colors min-w-[20px] text-center">
-                                        {post.likes || 0}
-                                    </span>
                                 </Link>
                             </li>
                         ))
@@ -59,29 +56,6 @@ export default function SideMenu() {
                     )}
                 </ul>
             </div>
-
-            {/* Newsletter Widget */}
-            <div className="bg-primary/5 rounded-xl p-6 border border-primary/10">
-                <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-2">
-                    <FaEnvelope />
-                    Newsletter
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                    Get the latest green news directly in your inbox.
-                </p>
-                <div className="space-y-2">
-                    <input
-                        type="email"
-                        placeholder="Your email address"
-                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                    />
-                    <button className="w-full bg-primary text-white font-medium py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm">
-                        Subscribe
-                    </button>
-                </div>
-            </div>
-
-            {/* Social Proof / Comments Widget could go here */}
         </aside>
     );
 }

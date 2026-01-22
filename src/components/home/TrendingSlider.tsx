@@ -18,6 +18,7 @@ interface Post {
 export default function TrendingSlider() {
     const [current, setCurrent] = useState(0);
     const [articles, setArticles] = useState<Post[]>([]);
+    const [paused, setPaused] = useState(false);
 
     useEffect(() => {
         async function fetchFeatured() {
@@ -52,21 +53,25 @@ export default function TrendingSlider() {
         setCurrent((prev) => (prev === 0 ? articles.length - 1 : prev - 1));
     };
 
-
-
     useEffect(() => {
+        if (paused) return; // Do not set interval if paused
+
         const timer = setInterval(() => {
             nextSlide();
         }, 5000);
         return () => clearInterval(timer);
-    }, [nextSlide, current]);
+    }, [nextSlide, current, paused]);
 
     if (!articles || articles.length === 0 || !articles[current]) {
         return null; // Or a loading skeleton
     }
 
     return (
-        <section className="relative w-full h-[500px] bg-gray-900 overflow-hidden">
+        <section
+            className="relative w-full h-[500px] bg-gray-900 overflow-hidden group"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+        >
             <AnimatePresence>
                 <motion.div
                     key={current}

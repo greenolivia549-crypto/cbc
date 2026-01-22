@@ -1,5 +1,6 @@
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
+import Category from "@/models/Category";
 import Link from "next/link";
 import Image from "next/image";
 import { FaCalendar, FaUser, FaTag } from "react-icons/fa";
@@ -14,16 +15,24 @@ export default async function CategoryPage({
 
     await connectToDatabase();
 
-    // Fetch posts by category (case-insensitive)
-    // We assume the slug in the URL maps to the category name in the DB
-    // Or we could have querying by 'category' field.
-    // Given the previous setup, we should probably query by category name regex.
+    // 1. Find the category document by slug to get the correct 'name'
+    // This is important if 'category' in Post is stored as 'Name' but slug is 'slug'
+    const categoryDoc = await Category.findOne({ slug: slug });
 
-    // Also only show published posts for safety, though not strictly asked, it's consistent.
-    const posts = await Post.find({
-        category: { $regex: new RegExp(`^${slug}$`, "i") },
-        published: true
-    }).sort({ createdAt: -1 });
+    let posts = [];
+    if (categoryDoc) {
+        // If category found, search posts by that category name (case-insensitive for safety)
+        posts = await Post.find({
+            category: { $regex: new RegExp(`^${categoryDoc.name}$`, "i") },
+            published: true
+        }).sort({ createdAt: -1 });
+    } else {
+        // Fallback: search by slug directly if for some reason category doc doesn't exist but posts use the slug (unlikely but safe)
+        posts = await Post.find({
+            category: { $regex: new RegExp(`^${slug}$`, "i") },
+            published: true
+        }).sort({ createdAt: -1 });
+    }
 
     return (
         <div className="container mx-auto px-4 py-12 min-h-screen">

@@ -11,11 +11,26 @@ export async function GET(req: Request) {
 
         const { searchParams } = new URL(req.url);
         const featured = searchParams.get("featured");
+        const q = searchParams.get("q");
 
-        const query: { published: boolean; featured?: boolean } = { published: true }; // Only show published posts
+        const query: { published: boolean; featured?: boolean; category?: string; $or?: object[] } = { published: true }; // Only show published posts
 
         if (featured === "true") {
             query.featured = true;
+        }
+
+        const category = searchParams.get("category");
+        if (category) {
+            query.category = category;
+        }
+
+        if (q) {
+            const regex = new RegExp(q, "i"); // Case-insensitive regex
+            query.$or = [
+                { title: { $regex: regex } },
+                { excerpt: { $regex: regex } },
+                // { content: { $regex: regex } } // Optional: deep search in content
+            ];
         }
 
         const posts = await Post.find(query).sort({ createdAt: -1 }).lean();

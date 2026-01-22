@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/db";
+import ContactMessage from "@/models/ContactMessage";
 
 export async function POST(req: Request) {
     try {
@@ -10,14 +12,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
         }
 
-        // In a real application, you would:
-        // 1. Save to database (Contact Model)
-        // 2. Send email notification (Nodemailer/Resend)
-
-        console.log("CONTACT FORM SUBMISSION:", { name, email, subject, message });
-
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await connectToDatabase();
+        await ContactMessage.create({ name, email, subject, message });
 
         return NextResponse.json({ message: "Message sent successfully" }, { status: 200 });
     } catch (error) {
