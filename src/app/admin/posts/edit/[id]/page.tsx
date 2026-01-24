@@ -11,6 +11,11 @@ interface Category {
     name: string;
 }
 
+interface Author {
+    _id: string;
+    name: string;
+}
+
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const router = useRouter();
@@ -20,6 +25,8 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
+    const [authors, setAuthors] = useState<Author[]>([]);
+    const [cursorPosition, setCursorPosition] = useState(0);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -32,11 +39,13 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         seoTitle: "",
         seoDescription: "",
         keywords: "",
-        featured: false
+
+        featured: false,
+        authorProfile: ""
     });
 
     // Fetch existing post data and categories
-    // Fetch existing post data and categories
+
     useEffect(() => {
         const fetchData = async () => {
             // Fetch Categories
@@ -46,7 +55,16 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                     const catData = await catRes.json();
                     setCategories(catData);
                 }
-            } catch (e) { console.error("Failed to load categories") }
+            } catch { console.error("Failed to load categories") }
+
+            // Fetch Authors
+            try {
+                const authorsRes = await fetch("/api/admin/authors");
+                if (authorsRes.ok) {
+                    const authorsData = await authorsRes.json();
+                    setAuthors(authorsData);
+                }
+            } catch { console.error("Failed to load authors") }
 
             // Check for local draft first
             const draftKey = `admin_post_edit_draft_${id}`;
@@ -83,7 +101,9 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                         seoTitle: data.seoTitle || "",
                         seoDescription: data.seoDescription || "",
                         keywords: data.keywords || "",
-                        featured: data.featured || false
+                        featured: data.featured || false,
+                        authorProfile: data.authorProfile || ""
+
                     });
                 } catch {
                     setError("Could not load post data.");
@@ -121,7 +141,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         }
     };
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isContentImage: boolean = false) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -140,7 +160,16 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
             if (!res.ok) throw new Error("Upload failed");
 
             const data = await res.json();
-            setFormData(prev => ({ ...prev, image: data.url }));
+
+            if (isContentImage) {
+                const imgTag = `<img src="${data.url}" alt="Image" class="w-full h-auto rounded-lg my-4" />`;
+                setFormData(prev => {
+                    const newContent = prev.content.substring(0, cursorPosition) + "\n" + imgTag + "\n" + prev.content.substring(cursorPosition);
+                    return { ...prev, content: newContent };
+                });
+            } else {
+                setFormData(prev => ({ ...prev, image: data.url }));
+            }
         } catch (err) {
             console.error(err);
             setError("Failed to upload image");
@@ -223,10 +252,30 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                             {/* Content */}
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">Content (HTML Supported)</label>
+
+                                <div className="mb-2">
+                                    <input
+                                        type="file"
+                                        id="contentImageUpload"
+                                        accept="image/*"
+                                        onChange={(e) => handleImageUpload(e, true)}
+                                        className="hidden"
+                                        disabled={uploading}
+                                    />
+                                    <label
+                                        htmlFor="contentImageUpload"
+                                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 Hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded cursor-pointer transition-colors border border-gray-200"
+                                    >
+                                        <FaCloudUploadAlt /> Insert Image in Content
+                                    </label>
+                                </div>
+
                                 <textarea
                                     name="content"
                                     value={formData.content}
                                     onChange={handleChange}
+                                    onClick={(e) => setCursorPosition(e.currentTarget.selectionStart)}
+                                    onKeyUp={(e) => setCursorPosition(e.currentTarget.selectionStart)}
                                     rows={15}
                                     className="w-full px-4 py-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-mono text-sm"
                                     required
@@ -355,6 +404,23 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                                         <option key={cat._id} value={cat.name}>{cat.name}</option>
                                     ))}
                                 </select>
+
+                            </div>
+
+                            {/* Author */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Author (Optional)</label>
+                                <select
+                                    name="authorProfile"
+                                    value={formData.authorProfile}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                >
+                                    <option value="">Default (Admin)</option>
+                                    {authors.map(author => (
+                                        <option key={author._id} value={author._id}>{author.name}</option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
@@ -372,7 +438,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                                             type="file"
                                             id="imageUpload"
                                             accept="image/*"
-                                            onChange={handleImageUpload}
+                                            onChange={(e) => handleImageUpload(e, false)}
                                             className="hidden"
                                             disabled={uploading}
                                         />
@@ -431,7 +497,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }

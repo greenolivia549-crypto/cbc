@@ -15,6 +15,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+import { Playfair_Display, Inter } from "next/font/google";
+
+const serifFont = Playfair_Display({
+  variable: "--font-serif",
+  subsets: ["latin"],
+});
+
+const sansFont = Inter({
+  variable: "--font-sans",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "GreenBlog - Professional Blogging Platform",
   description: "Trending articles, latest news, and expert insights.",
@@ -28,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} ${serifFont.variable} ${sansFont.variable} antialiased bg-background text-foreground`}
       >
         <AuthProvider>
           <Header />

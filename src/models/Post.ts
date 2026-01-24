@@ -34,6 +34,10 @@ const PostSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
+        authorProfile: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Author",
+        },
         featured: {
             type: Boolean,
             default: false,

@@ -235,7 +235,7 @@ export default function HelpCentrePage() {
                                 </button>
                                 {status === "success" && (
                                     <div className="p-4 bg-green-50 text-green-700 rounded-lg text-center border border-green-200">
-                                        Message sent! We'll get back to you soon.
+                                        Message sent! We&apos;ll get back to you soon.
                                     </div>
                                 )}
                                 {status === "error" && (

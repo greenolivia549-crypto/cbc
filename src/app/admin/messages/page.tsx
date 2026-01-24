@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaEnvelope, FaCalendar, FaPaperPlane, FaUser } from "react-icons/fa";
+import { FaCalendar, FaPaperPlane, FaUser } from "react-icons/fa";
 
 interface Message {
     _id: string;

@@ -3,6 +3,7 @@
 import TrendingSlider from "@/components/home/TrendingSlider";
 import ArticleGrid from "@/components/home/ArticleGrid";
 import SideMenu from "@/components/layout/SideMenu";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -18,9 +19,9 @@ export default function Home() {
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-3xl font-bold text-primary">Latest Articles</h2>
-              <button className="text-sm font-medium text-primary hover:underline">
+              <Link href="/blog" className="text-sm font-medium text-primary hover:underline">
                 View All
-              </button>
+              </Link>
             </div>
 
             <ArticleGrid />

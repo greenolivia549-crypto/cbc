@@ -11,12 +11,19 @@ interface Category {
     name: string;
 }
 
+interface Author {
+    _id: string;
+    name: string;
+}
+
 export default function CreatePostPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
+    const [authors, setAuthors] = useState<Author[]>([]);
+    const [cursorPosition, setCursorPosition] = useState(0);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -29,7 +36,9 @@ export default function CreatePostPage() {
         seoTitle: "",
         seoDescription: "",
         keywords: "",
-        featured: false
+
+        featured: false,
+        authorProfile: ""
     });
 
     // Load saved draft on mount
@@ -67,7 +76,21 @@ export default function CreatePostPage() {
                 console.error("Failed to load categories");
             }
         };
+
+        const fetchAuthors = async () => {
+            try {
+                const res = await fetch("/api/admin/authors");
+                if (res.ok) {
+                    const data = await res.json();
+                    setAuthors(data);
+                }
+            } catch {
+                console.error("Failed to load authors");
+            }
+        };
+
         fetchCats();
+        fetchAuthors();
     }, []);
 
     // Auto-save draft
@@ -94,7 +117,7 @@ export default function CreatePostPage() {
         }
     };
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isContentImage: boolean = false) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -113,7 +136,16 @@ export default function CreatePostPage() {
             if (!res.ok) throw new Error("Upload failed");
 
             const data = await res.json();
-            setFormData(prev => ({ ...prev, image: data.url }));
+
+            if (isContentImage) {
+                const imgTag = `<img src="${data.url}" alt="Image" class="w-full h-auto rounded-lg my-4" />`;
+                setFormData(prev => {
+                    const newContent = prev.content.substring(0, cursorPosition) + "\n" + imgTag + "\n" + prev.content.substring(cursorPosition);
+                    return { ...prev, content: newContent };
+                });
+            } else {
+                setFormData(prev => ({ ...prev, image: data.url }));
+            }
         } catch (err) {
             console.error(err);
             setError("Failed to upload image");
@@ -195,10 +227,30 @@ export default function CreatePostPage() {
                             {/* Content */}
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">Content (HTML Supported)</label>
+
+                                <div className="mb-2">
+                                    <input
+                                        type="file"
+                                        id="contentImageUpload"
+                                        accept="image/*"
+                                        onChange={(e) => handleImageUpload(e, true)}
+                                        className="hidden"
+                                        disabled={uploading}
+                                    />
+                                    <label
+                                        htmlFor="contentImageUpload"
+                                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 Hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded cursor-pointer transition-colors border border-gray-200"
+                                    >
+                                        <FaCloudUploadAlt /> Insert Image in Content
+                                    </label>
+                                </div>
+
                                 <textarea
                                     name="content"
                                     value={formData.content}
                                     onChange={handleChange}
+                                    onClick={(e) => setCursorPosition(e.currentTarget.selectionStart)}
+                                    onKeyUp={(e) => setCursorPosition(e.currentTarget.selectionStart)}
                                     rows={15}
                                     className="w-full px-4 py-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-mono text-sm"
                                     placeholder="Write your article content here..."
@@ -333,6 +385,23 @@ export default function CreatePostPage() {
                                     <p className="text-xs text-red-500 mt-1">No categories found. Create one first.</p>
                                 )}
                             </div>
+
+
+                            {/* Author */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Author (Optional)</label>
+                                <select
+                                    name="authorProfile"
+                                    value={formData.authorProfile}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                >
+                                    <option value="">Default (Admin)</option>
+                                    {authors.map(author => (
+                                        <option key={author._id} value={author._id}>{author.name}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
 
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
@@ -349,7 +418,7 @@ export default function CreatePostPage() {
                                             type="file"
                                             id="imageUpload"
                                             accept="image/*"
-                                            onChange={handleImageUpload}
+                                            onChange={(e) => handleImageUpload(e, false)}
                                             className="hidden"
                                             disabled={uploading}
                                         />
@@ -408,7 +477,7 @@ export default function CreatePostPage() {
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }

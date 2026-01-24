@@ -88,7 +88,7 @@ function SearchResults() {
         <div className="space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-4">
                 <h1 className="text-3xl font-bold text-gray-900">
-                    Search Results for <span className="text-primary">"{query}"</span>
+                    Search Results for <span className="text-primary">&quot;{query}&quot;</span>
                 </h1>
 
                 {/* Category Filter */}
@@ -154,7 +154,7 @@ function SearchResults() {
                 </div>
             ) : (
                 <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                    <p className="text-gray-500 text-lg">No results found for "{query}"{selectedCategory && ` in ${selectedCategory}`}.</p>
+                    <p className="text-gray-500 text-lg">No results found for &quot;{query}&quot;{selectedCategory && ` in ${selectedCategory}`}.</p>
                     <p className="text-gray-400 mt-2">Try checking your spelling or use different keywords.</p>
                 </div>
             )}

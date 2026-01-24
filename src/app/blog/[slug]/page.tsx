@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ShareButton from "@/components/blog/ShareButton";
 import { notFound } from "next/navigation";
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
@@ -116,10 +117,10 @@ export default async function SinglePostPage({
                         <div className="mt-12 pt-8 border-t border-gray-100">
                             <h3 className="text-xl font-bold text-gray-900 mb-4">Share this article</h3>
                             <div className="flex gap-4">
-                                {/* Social Share Buttons Placeholder */}
-                                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold">Facebook</button>
-                                <button className="px-4 py-2 bg-sky-500 text-white rounded-lg text-sm font-bold">Twitter</button>
-                                <button className="px-4 py-2 bg-blue-700 text-white rounded-lg text-sm font-bold">LinkedIn</button>
+                                <ShareButton
+                                    title={post.title}
+                                    text={post.excerpt}
+                                />
                             </div>
                         </div>
 

@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { FaChartLine, FaPen, FaList, FaUsers, FaHome, FaTag, FaEnvelope } from "react-icons/fa";
+import { FaChartLine, FaPen, FaList, FaUsers, FaHome, FaTag, FaEnvelope, FaUserTie, FaUserClock } from "react-icons/fa";
 
 export default function AdminLayout({
     children,
@@ -42,6 +42,8 @@ export default function AdminLayout({
         { name: "New Post", href: "/admin/posts/create", icon: FaPen },
         { name: "Categories", href: "/admin/categories", icon: FaTag }, // Added Categories
         { name: "Users", href: "/admin/users", icon: FaUsers },
+        { name: "Authors", href: "/admin/authors", icon: FaUserTie },
+        { name: "Requests", href: "/admin/author-requests", icon: FaUserClock },
         { name: "Messages", href: "/admin/messages", icon: FaEnvelope },
     ];
 

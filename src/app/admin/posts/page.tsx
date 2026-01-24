@@ -12,6 +12,9 @@ interface Post {
     author?: {
         name: string;
     };
+    authorProfile?: {
+        name: string;
+    };
     createdAt: string;
     published: boolean;
 }
@@ -102,12 +105,12 @@ export default function AdminPostsPage() {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-600">
-                                        {post.author?.name || "Admin"}
+                                        {post.authorProfile?.name || post.author?.name || "Admin"}
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${post.published
-                                                ? "bg-green-50 text-green-700"
-                                                : "bg-gray-100 text-gray-600"
+                                            ? "bg-green-50 text-green-700"
+                                            : "bg-gray-100 text-gray-600"
                                             }`}>
                                             {post.published ? "Published" : "Draft"}
                                         </span>

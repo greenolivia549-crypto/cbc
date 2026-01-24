@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         const auth = await checkAdminAuth();
         if (!auth.authorized) return auth.response;
 
-        const { title, slug, content, excerpt, image, category, seoTitle, seoDescription, keywords, featured, published } = await req.json();
+        const { title, slug, content, excerpt, image, category, seoTitle, seoDescription, keywords, featured, published, authorProfile } = await req.json();
 
         // Basic Validation
         if (!title || !slug || !content || !category) {
@@ -37,6 +37,7 @@ export async function POST(req: Request) {
 
             featured,
             published,
+            authorProfile,
             author: auth.session?.user.id
         });
 
@@ -57,7 +58,8 @@ export async function GET() {
 
         const posts = await Post.find({})
             .sort({ createdAt: -1 })
-            .populate("author", "name email");
+            .populate("author", "name email")
+            .populate("authorProfile", "name");
 
         return NextResponse.json(posts);
 
