@@ -37,15 +37,20 @@ export async function POST(req: Request) {
 
             featured,
             published,
-            authorProfile,
+            featured,
+            published,
+            ...(authorProfile ? { authorProfile } : {}),
             author: auth.session?.user.id
         });
 
         return NextResponse.json({ message: "Post created successfully", post: newPost }, { status: 201 });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Create Post Error:", error);
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        if (error.name === 'ValidationError') {
+            return NextResponse.json({ message: error.message }, { status: 400 });
+        }
+        return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
     }
 }
 

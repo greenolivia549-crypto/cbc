@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
 import "@/models/User"; // Ensure User model is registered for population
+import "@/models/Author"; // Ensure Author model is registered
 import Interactions from "@/components/blog/Interactions";
 import { FaCalendar, FaUser } from "react-icons/fa";
 
@@ -13,7 +14,10 @@ import BackButton from "@/components/common/BackButton";
 async function getPost(slug: string) {
     await connectToDatabase();
     // Try finding in DB
-    const post = await Post.findOne({ slug }).populate("author", "name");
+    const post = await Post.findOne({ slug })
+        .populate("author", "name")
+        .populate("authorProfile");
+
     if (post) return post;
 
     return null;
@@ -63,6 +67,11 @@ export default async function SinglePostPage({
         notFound();
     }
 
+    // Determine Author Data (Profile > User > Default)
+    const authorName = post.authorProfile?.name || post.author?.name || "Admin";
+    const authorImage = post.authorProfile?.image || null;
+    const authorBio = post.authorProfile?.bio || "Passionate about green energy and sustainable living practices.";
+
     return (
         <article className="min-h-screen bg-white pb-20">
             {/* Hero Header */}
@@ -87,7 +96,7 @@ export default async function SinglePostPage({
                         </span>
                         <span className="flex items-center gap-2">
                             <FaUser />
-                            {post.author?.name || "Admin"}
+                            {authorName}
                         </span>
                     </div>
 
@@ -133,16 +142,22 @@ export default async function SinglePostPage({
                         <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
                             <h3 className="text-lg font-bold text-gray-900 mb-4">About the Author</h3>
                             <div className="flex items-center gap-4 mb-4">
-                                <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary text-xl">
-                                    <FaUser />
+                                <div className="w-12 h-12 rounded-full overflow-hidden relative border border-gray-200 bg-white">
+                                    {authorImage ? (
+                                        <Image src={authorImage} alt={authorName} fill className="object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary text-xl">
+                                            <FaUser />
+                                        </div>
+                                    )}
                                 </div>
                                 <div>
-                                    <p className="font-bold text-gray-900">{post.author?.name || "Admin"}</p>
+                                    <p className="font-bold text-gray-900">{authorName}</p>
                                     <p className="text-xs text-gray-500">Content Creator</p>
                                 </div>
                             </div>
                             <p className="text-sm text-gray-600">
-                                Passionate about green energy and sustainable living practices.
+                                {authorBio}
                             </p>
                         </div>
                     </aside>
