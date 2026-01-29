@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaPaperPlane } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -49,34 +49,34 @@ export default function ContactPage() {
             <div className="container mx-auto px-4">
                 {/* Header */}
                 <div className="text-center max-w-2xl mx-auto mb-16">
-                    <motion.h1
+                    <m.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-4xl md:text-5xl font-bold text-primary mb-4"
                     >
                         Get in Touch
-                    </motion.h1>
-                    <motion.p
+                    </m.h1>
+                    <m.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
                         className="text-gray-600 text-lg"
                     >
                         Have a question about sustainable living or want to collaborate? We&apos;d love to hear from you.
-                    </motion.p>
+                    </m.p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
 
                     {/* Contact Info */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
                         className="space-y-8"
                     >
                         <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-8">Contact Information</h2>
+                            <h2 className="text-2xl font-bold text-foreground mb-8">Contact Information</h2>
 
                             <div className="space-y-8">
                                 <div className="flex items-start gap-4">
@@ -84,7 +84,7 @@ export default function ContactPage() {
                                         <FaMapMarkerAlt className="text-primary text-xl" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900 mb-1">Our Location</h3>
+                                        <h3 className="font-bold text-foreground mb-1">Our Location</h3>
                                         <p className="text-gray-600 leading-relaxed">
                                             123 Green Earth Avenue<br />
                                             Eco District, NY 10012<br />
@@ -98,7 +98,7 @@ export default function ContactPage() {
                                         <FaEnvelope className="text-primary text-xl" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900 mb-1">Email Us</h3>
+                                        <h3 className="font-bold text-foreground mb-1">Email Us</h3>
                                         <p className="text-gray-600 mb-1">General: hello@greenblog.com</p>
                                         <p className="text-gray-600">Support: support@greenblog.com</p>
                                     </div>
@@ -109,7 +109,7 @@ export default function ContactPage() {
                                         <FaPhone className="text-primary text-xl" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900 mb-1">Call Us</h3>
+                                        <h3 className="font-bold text-foreground mb-1">Call Us</h3>
                                         <p className="text-gray-600">+1 (555) 123-4567</p>
                                         <p className="text-gray-500 text-sm mt-1">Mon-Fri: 9am - 6pm EST</p>
                                     </div>
@@ -124,16 +124,16 @@ export default function ContactPage() {
                                 {/* In a real app, embed Google Maps iframe here */}
                             </div>
                         </div>
-                    </motion.div>
+                    </m.div>
 
                     {/* Contact Form */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
                         className="bg-white p-8 md:p-10 rounded-2xl shadow-lg border border-gray-100"
                     >
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-6">Send us a Message</h2>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -204,26 +204,26 @@ export default function ContactPage() {
                             </button>
 
                             {status === "success" && (
-                                <motion.div
+                                <m.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     className="p-4 bg-green-50 text-green-700 rounded-lg text-center border border-green-200"
                                 >
                                     Thank you! Your message has been sent successfully.
-                                </motion.div>
+                                </m.div>
                             )}
 
                             {status === "error" && (
-                                <motion.div
+                                <m.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     className="p-4 bg-red-50 text-red-700 rounded-lg text-center border border-red-200"
                                 >
                                     Something went wrong. Please try again later.
-                                </motion.div>
+                                </m.div>
                             )}
                         </form>
-                    </motion.div>
+                    </m.div>
                 </div>
             </div>
         </div>

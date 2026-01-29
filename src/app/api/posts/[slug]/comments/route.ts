@@ -5,7 +5,7 @@ import connectToDatabase from "@/lib/db";
 import Comment from "@/models/Comment";
 import Post from "@/models/Post";
 import "@/models/User"; // Ensure User model is registered for population
-import { DUMMY_POSTS } from "@/lib/dummyData";
+
 
 export async function GET(
     req: Request,
@@ -18,11 +18,6 @@ export async function GET(
         const post = await Post.findOne({ slug });
 
         if (!post) {
-            const dummyPost = DUMMY_POSTS.find((p: { slug: string }) => p.slug === slug);
-            if (dummyPost) {
-                // Return empty comments or mock comments for dummy post
-                return NextResponse.json([]);
-            }
             return NextResponse.json({ message: "Post not found" }, { status: 404 });
         }
 
@@ -57,16 +52,6 @@ export async function POST(
         const post = await Post.findOne({ slug });
 
         if (!post) {
-            const dummyPost = DUMMY_POSTS.find((p: { slug: string }) => p.slug === slug);
-            if (dummyPost) {
-                // Return mock newly created comment
-                return NextResponse.json({
-                    _id: "dummy_comment_" + Date.now(),
-                    content,
-                    user: { name: session.user.name, image: session.user.image },
-                    createdAt: new Date().toISOString()
-                }, { status: 201 });
-            }
             return NextResponse.json({ message: "Post not found" }, { status: 404 });
         }
 

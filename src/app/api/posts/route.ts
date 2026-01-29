@@ -1,39 +1,29 @@
 import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/db";
-import Post from "@/models/Post";
-import User from "@/models/User";
+import { getPosts } from "@/lib/posts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import User from "@/models/User";
 
 export async function GET(req: Request) {
     try {
-        await connectToDatabase();
-
         const { searchParams } = new URL(req.url);
-        const featured = searchParams.get("featured");
-        const q = searchParams.get("q");
+        const featured = searchParams.get("featured") === "true";
+        const q = searchParams.get("q") || undefined;
+        const category = searchParams.get("category") || undefined;
+        const startDate = searchParams.get("startDate") || undefined;
+        const endDate = searchParams.get("endDate") || undefined;
+        const page = parseInt(searchParams.get("page") || "1");
+        const limit = parseInt(searchParams.get("limit") || "9");
 
-        const query: { published: boolean; featured?: boolean; category?: string; $or?: object[] } = { published: true }; // Only show published posts
-
-        if (featured === "true") {
-            query.featured = true;
-        }
-
-        const category = searchParams.get("category");
-        if (category) {
-            query.category = category;
-        }
-
-        if (q) {
-            const regex = new RegExp(q, "i"); // Case-insensitive regex
-            query.$or = [
-                { title: { $regex: regex } },
-                { excerpt: { $regex: regex } },
-                // { content: { $regex: regex } } // Optional: deep search in content
-            ];
-        }
-
-        const posts = await Post.find(query).sort({ createdAt: -1 }).lean();
+        const result = await getPosts({
+            page,
+            limit,
+            featured,
+            category,
+            search: q,
+            startDate,
+            endDate
+        });
 
         // Check for User Session to determine 'isFavorited'
         const session = await getServerSession(authOptions);
@@ -46,12 +36,15 @@ export async function GET(req: Request) {
             }
         }
 
-        const postsWithStatus = posts.map((post) => ({
+        const postsWithStatus = result.posts.map((post) => ({
             ...post,
-            isFavorited: userFavorites.includes((post._id as { toString: () => string }).toString())
+            isFavorited: userFavorites.includes(post._id.toString())
         }));
 
-        return NextResponse.json(postsWithStatus);
+        return NextResponse.json({
+            posts: postsWithStatus,
+            pagination: result.pagination
+        });
     } catch (error) {
         console.error("Failed to fetch posts:", error);
         return NextResponse.json({ message: "Failed to fetch posts" }, { status: 500 });

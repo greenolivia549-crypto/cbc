@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { FaSignInAlt, FaTimes } from "react-icons/fa";
 
@@ -16,7 +16,7 @@ export default function LoginPromptModal({ isOpen, onClose, message = "Please lo
             {isOpen && (
                 <>
                     {/* Backdrop */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -25,7 +25,7 @@ export default function LoginPromptModal({ isOpen, onClose, message = "Please lo
                     />
 
                     {/* Modal */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -43,7 +43,7 @@ export default function LoginPromptModal({ isOpen, onClose, message = "Please lo
                                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-2xl">
                                     <FaSignInAlt />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900">Login Required</h3>
+                                <h3 className="text-xl font-bold text-foreground">Login Required</h3>
                             </div>
 
                             {/* Body */}
@@ -68,7 +68,7 @@ export default function LoginPromptModal({ isOpen, onClose, message = "Please lo
                                 </div>
                             </div>
                         </div>
-                    </motion.div>
+                    </m.div>
                 </>
             )}
         </AnimatePresence>

@@ -104,7 +104,7 @@ export default function ProfilePage() {
 
                 {/* Header */}
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold text-gray-900">Account Settings</h1>
+                    <h1 className="text-3xl font-bold text-foreground">Account Settings</h1>
                     <p className="mt-2 text-gray-600">Manage your profile and security preferences.</p>
                 </div>
 
@@ -112,7 +112,7 @@ export default function ProfilePage() {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
                         <FaUser className="text-primary" />
-                        <h2 className="text-lg font-bold text-gray-900">Profile Information</h2>
+                        <h2 className="text-lg font-bold text-foreground">Profile Information</h2>
                     </div>
                     <div className="p-6">
                         <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -163,7 +163,7 @@ export default function ProfilePage() {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
                         <FaLock className="text-primary" />
-                        <h2 className="text-lg font-bold text-gray-900">Security</h2>
+                        <h2 className="text-lg font-bold text-foreground">Security</h2>
                     </div>
                     <div className="p-6">
                         <form onSubmit={handleUpdatePassword} className="space-y-4">
@@ -216,7 +216,7 @@ export default function ProfilePage() {
                                 <button
                                     type="submit"
                                     disabled={loadingPassword}
-                                    className="flex items-center gap-2 px-6 py-2 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-900 transition-colors disabled:opacity-70"
+                                    className="flex items-center gap-2 px-6 py-2 bg-foreground text-white rounded-lg font-medium hover:bg-green-900 transition-colors disabled:opacity-70"
                                 >
                                     {loadingPassword ? "Updating..." : <><FaLock /> Update Password</>}
                                 </button>

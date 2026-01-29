@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 
 export default function SignIn() {
@@ -41,7 +41,7 @@ export default function SignIn() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background px-4">
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg border border-gray-100"
@@ -103,7 +103,7 @@ export default function SignIn() {
                         Create account
                     </Link>
                 </div>
-            </motion.div>
+            </m.div>
         </div>
     );
 }

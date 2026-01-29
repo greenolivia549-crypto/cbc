@@ -23,8 +23,7 @@ export async function GET() {
         const posts = await Post.find({}).select("likes");
         const totalDbLikes = posts.reduce((sum, post) => sum + (post.likes || 0), 0);
 
-        // Add some "fake" likes from dummy data for initial impression if DB is empty
-        const totalLikes = totalDbLikes + (totalDbLikes === 0 ? 3500 : 0);
+        const totalLikes = totalDbLikes;
 
         return NextResponse.json({
             totalPosts,

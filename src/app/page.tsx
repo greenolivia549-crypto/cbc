@@ -1,15 +1,22 @@
-"use client";
-
 import TrendingSlider from "@/components/home/TrendingSlider";
 import ArticleGrid from "@/components/home/ArticleGrid";
 import SideMenu from "@/components/layout/SideMenu";
 import Link from "next/link";
+import { getPosts, getFeaturedPosts, getPopularPosts } from "@/lib/posts";
 
-export default function Home() {
+export const revalidate = 60; // Revalidate every 60 seconds
+
+export default async function Home() {
+  const [latestData, featuredPosts, popularPosts] = await Promise.all([
+    getPosts({ limit: 9 }),
+    getFeaturedPosts(), // Fetch featured posts specifically
+    getPopularPosts()
+  ]);
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <TrendingSlider />
+      <TrendingSlider posts={featuredPosts} />
 
       {/* Main Content Area */}
       <div className="container mx-auto px-4 py-12">
@@ -24,12 +31,12 @@ export default function Home() {
               </Link>
             </div>
 
-            <ArticleGrid />
+            <ArticleGrid initialPosts={latestData.posts} />
           </div>
 
           {/* Right Column: Sidebar */}
           <div className="lg:col-span-1">
-            <SideMenu />
+            <SideMenu popularPosts={popularPosts} />
           </div>
         </div>
       </div>

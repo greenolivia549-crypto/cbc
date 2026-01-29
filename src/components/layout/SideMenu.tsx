@@ -1,33 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { FaFire } from "react-icons/fa";
 
-interface Post {
-    _id: string;
-    title: string;
-    slug: string;
-    likes?: number;
-}
+import { IPost } from "@/types";
 
-export default function SideMenu() {
-    const [popularPosts, setPopularPosts] = useState<Post[]>([]);
-
-    useEffect(() => {
-        async function fetchPopular() {
-            try {
-                const res = await fetch("/api/posts");
-                if (res.ok) {
-                    const data = await res.json();
-                    // Sort by likes desc
-                    const sorted = data.sort((a: Post, b: Post) => (b.likes || 0) - (a.likes || 0)).slice(0, 5);
-                    setPopularPosts(sorted);
-                }
-            } catch {
-                console.error("Failed to fetch popular posts");
-            }
-        }
-        fetchPopular();
-    }, []);
+export default function SideMenu({ popularPosts = [] }: { popularPosts?: IPost[] }) {
+    // Used to basic client side hydration if needed, but here we just render props
 
     return (
         <aside className="space-y-8">

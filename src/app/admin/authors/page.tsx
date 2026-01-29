@@ -83,7 +83,6 @@ export default function AdminAuthorsPage() {
                                 width={96}
                                 height={96}
                                 className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-gray-50"
-                                unoptimized
                             />
                             <h3 className="text-xl font-bold text-gray-900">{author.name}</h3>
                             <p className="text-sm text-gray-500 mb-4">{author.email}</p>

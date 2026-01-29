@@ -65,6 +65,12 @@ const PostSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Indexes for performance
+PostSchema.index({ published: 1, createdAt: -1 });
+PostSchema.index({ featured: 1, createdAt: -1 });
+PostSchema.index({ likes: -1 });
+PostSchema.index({ category: 1, createdAt: -1 });
+
 // Prevent mongoose from creating a new model if it already exists (Hot Reload fix)
 // Delete to force recompile if schema changed
 if (process.env.NODE_ENV === "development" && mongoose.models.Post) {

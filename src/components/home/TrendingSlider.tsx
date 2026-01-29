@@ -1,47 +1,23 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import Link from "next/link";
 
-interface Post {
-    _id: string;
-    title: string;
-    slug: string;
-    excerpt: string;
-    image: string;
-    featured?: boolean;
-}
+import { IPost } from "@/types";
 
-export default function TrendingSlider() {
+export default function TrendingSlider({ posts }: { posts: IPost[] }) {
     const [current, setCurrent] = useState(0);
-    const [articles, setArticles] = useState<Post[]>([]);
+    const [articles, setArticles] = useState<IPost[]>(posts);
     const [paused, setPaused] = useState(false);
 
     useEffect(() => {
-        async function fetchFeatured() {
-            try {
-                const res = await fetch("/api/posts?featured=true");
-                if (res.ok) {
-                    const data = await res.json();
-                    // Filter client side if API returns all, or rely on API if implemented
-                    // Assuming API currently returns all, let's filter here just in case
-                    const featured = data.filter((p: Post) => p.featured).slice(0, 5);
-                    if (featured.length > 0) {
-                        setArticles(featured);
-                    } else if (data.length > 0) {
-                        // Fallback to latest 3 if no featured
-                        setArticles(data.slice(0, 3));
-                    }
-                }
-            } catch {
-                console.error("Failed to fetch featured posts");
-            }
+        if (posts.length > 0) {
+            setArticles(posts);
         }
-        fetchFeatured();
-    }, []);
+    }, [posts]);
 
     const nextSlide = useCallback(() => {
         if (articles.length === 0) return;
@@ -62,9 +38,11 @@ export default function TrendingSlider() {
         return () => clearInterval(timer);
     }, [nextSlide, current, paused]);
 
-    if (!articles || articles.length === 0 || !articles[current]) {
+    if (!articles || articles.length === 0) {
         return null; // Or a loading skeleton
     }
+
+    if (!articles[current]) return null;
 
     return (
         <section
@@ -73,7 +51,7 @@ export default function TrendingSlider() {
             onMouseLeave={() => setPaused(false)}
         >
             <AnimatePresence>
-                <motion.div
+                <m.div
                     key={current}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -90,15 +68,15 @@ export default function TrendingSlider() {
 
                     <div className="absolute inset-0 flex items-center justify-center text-center p-4">
                         <div className="max-w-3xl text-white">
-                            <motion.span
+                            <m.span
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.5 }}
                                 className="inline-block px-3 py-1 mb-4 text-xs font-bold uppercase tracking-wider bg-primary rounded-full"
                             >
                                 Trending Now
-                            </motion.span>
-                            <motion.h2
+                            </m.span>
+                            <m.h2
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.5 }}
@@ -107,18 +85,18 @@ export default function TrendingSlider() {
                                 <Link href={articles[current].slug !== '#' ? `/blog/${articles[current].slug}` : '#'}>
                                     {articles[current].title}
                                 </Link>
-                            </motion.h2>
-                            <motion.p
+                            </m.h2>
+                            <m.p
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.4, duration: 0.5 }}
                                 className="text-lg md:text-xl text-gray-200"
                             >
                                 {articles[current].excerpt}
-                            </motion.p>
+                            </m.p>
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
             </AnimatePresence>
 
             {/* Navigation Buttons */}
@@ -146,7 +124,7 @@ export default function TrendingSlider() {
                         <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${current === idx ? "bg-transparent" : "bg-white/50 hover:bg-white"}`} />
 
                         {current === idx && (
-                            <motion.div
+                            <m.div
                                 layoutId="active-indicator"
                                 className="absolute inset-0 bg-primary rounded-full w-8 -left-2.5"
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}

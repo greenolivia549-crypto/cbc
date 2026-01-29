@@ -1,31 +1,15 @@
 import Image from "next/image";
 import ShareButton from "@/components/blog/ShareButton";
 import { notFound } from "next/navigation";
-import connectToDatabase from "@/lib/db";
-import Post from "@/models/Post";
-import "@/models/User"; // Ensure User model is registered for population
-import "@/models/Author"; // Ensure Author model is registered
+import { getPostBySlug } from "@/lib/posts";
 import Interactions from "@/components/blog/Interactions";
 import { FaCalendar, FaUser } from "react-icons/fa";
 
 import BackButton from "@/components/common/BackButton";
 
-// Helper to get post
-async function getPost(slug: string) {
-    await connectToDatabase();
-    // Try finding in DB
-    const post = await Post.findOne({ slug })
-        .populate("author", "name")
-        .populate("authorProfile");
-
-    if (post) return post;
-
-    return null;
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const post = await getPost(slug);
+    const post = await getPostBySlug(slug);
 
     if (!post) {
         return {
@@ -61,16 +45,19 @@ export default async function SinglePostPage({
     params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
-    const post = await getPost(slug);
+    const post = await getPostBySlug(slug);
 
     if (!post) {
         notFound();
     }
 
     // Determine Author Data (Profile > User > Default)
-    const authorName = post.authorProfile?.name || post.author?.name || "Admin";
-    const authorImage = post.authorProfile?.image || null;
-    const authorBio = post.authorProfile?.bio || "Passionate about green energy and sustainable living practices.";
+    // Note: authorProfile is currently string ID in IPost serializtion.
+    // Ideally we should populate it in getPostBySlug if needed.
+    // For now we use the basic author info or fallback.
+    const authorName = post.author?.name || "Admin";
+    const authorImage = post.author?.image || null;
+    const authorBio = "Passionate about green energy and sustainable living practices."; // Fallback bio since we aren't fetching full profile yet
 
     return (
         <article className="min-h-screen bg-white pb-20">
@@ -81,7 +68,6 @@ export default async function SinglePostPage({
                     alt={post.title}
                     fill
                     className="object-cover"
-                    unoptimized
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 

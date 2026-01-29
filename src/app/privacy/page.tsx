@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
                 <p className="mb-4">Last updated: {new Date().toLocaleDateString()}</p>
 
                 <section className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-900">1. Introduction</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-foreground">1. Introduction</h2>
                     <p>
                         Welcome to GreenBlog. We respect your privacy and are committed to protecting your personal data.
                         This privacy policy will inform you as to how we look after your personal data when you visit our website
@@ -23,7 +23,7 @@ export default function PrivacyPolicy() {
                 </section>
 
                 <section className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-900">2. Data We Collect</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-foreground">2. Data We Collect</h2>
                     <p>
                         We may collect, use, store and transfer different kinds of personal data about you which we have grouped together follows:
                     </p>
@@ -36,7 +36,7 @@ export default function PrivacyPolicy() {
                 </section>
 
                 <section className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-900">3. How We Use Your Data</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-foreground">3. How We Use Your Data</h2>
                     <p>
                         We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:
                     </p>
@@ -48,14 +48,14 @@ export default function PrivacyPolicy() {
                 </section>
 
                 <section className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-900">4. Data Security</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-foreground">4. Data Security</h2>
                     <p>
                         We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way, altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know.
                     </p>
                 </section>
 
                 <section className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-900">5. Contact Us</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-foreground">5. Contact Us</h2>
                     <p>
                         If you have any questions about this privacy policy or our privacy practices, please contact us at:
                         <br />

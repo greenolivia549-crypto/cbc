@@ -37,8 +37,6 @@ export async function POST(req: Request) {
 
             featured,
             published,
-            featured,
-            published,
             ...(authorProfile ? { authorProfile } : {}),
             author: auth.session?.user.id
         });
@@ -47,9 +45,23 @@ export async function POST(req: Request) {
 
     } catch (error: any) {
         console.error("Create Post Error:", error);
+
+        // Mongoose Validation Error
         if (error.name === 'ValidationError') {
-            return NextResponse.json({ message: error.message }, { status: 400 });
+            const messages = Object.values(error.errors).map((val: any) => val.message);
+            return NextResponse.json({ message: messages.join(', ') }, { status: 400 });
         }
+
+        // Duplicate Key Error (e.g., Slug)
+        if (error.code === 11000) {
+            return NextResponse.json({ message: "Duplicate value entered for unique field (likely slug or title)" }, { status: 400 });
+        }
+
+        // Cast Error (Invalid ID)
+        if (error.name === 'CastError') {
+            return NextResponse.json({ message: `Invalid ID format: ${error.path}` }, { status: 400 });
+        }
+
         return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
     }
 }

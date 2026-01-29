@@ -58,7 +58,6 @@ export default async function CategoryPage({
                                             alt={post.title}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                            unoptimized
                                         />
                                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wide flex items-center gap-1">
                                             <FaTag size={10} />

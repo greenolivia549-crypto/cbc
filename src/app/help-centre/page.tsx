@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaPaperPlane, FaQuestionCircle, FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 const faqs = [
     {
@@ -73,32 +73,32 @@ export default function HelpCentrePage() {
             <div className="container mx-auto px-4">
                 {/* Header */}
                 <div className="text-center max-w-2xl mx-auto mb-16">
-                    <motion.h1
+                    <m.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-4xl md:text-5xl font-bold text-primary mb-4"
                     >
                         Help Centre
-                    </motion.h1>
-                    <motion.p
+                    </m.h1>
+                    <m.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
                         className="text-gray-600 text-lg"
                     >
                         Find answers to common questions or get in touch with our team.
-                    </motion.p>
+                    </m.p>
                 </div>
 
                 <div className="max-w-4xl mx-auto space-y-16">
 
                     {/* FAQ Section */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                     >
-                        <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                        <h2 className="text-2xl font-bold text-foreground mb-8 flex items-center gap-2">
                             <FaQuestionCircle className="text-primary" /> Frequently Asked Questions
                         </h2>
                         <div className="space-y-4">
@@ -113,7 +113,7 @@ export default function HelpCentrePage() {
                                     </button>
                                     <AnimatePresence>
                                         {openFaq === index && (
-                                            <motion.div
+                                            <m.div
                                                 initial={{ height: 0, opacity: 0 }}
                                                 animate={{ height: "auto", opacity: 1 }}
                                                 exit={{ height: 0, opacity: 0 }}
@@ -122,27 +122,27 @@ export default function HelpCentrePage() {
                                                 <div className="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-50 pt-4">
                                                     {faq.answer}
                                                 </div>
-                                            </motion.div>
+                                            </m.div>
                                         )}
                                     </AnimatePresence>
                                 </div>
                             ))}
                         </div>
-                    </motion.div>
+                    </m.div>
 
                     {/* Contact Form Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Contact Info */}
                         <div className="space-y-8">
                             <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full">
-                                <h2 className="text-2xl font-bold text-gray-900 mb-8">Contact Information</h2>
+                                <h2 className="text-2xl font-bold text-foreground mb-8">Contact Information</h2>
                                 <div className="space-y-8">
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                                             <FaMapMarkerAlt className="text-primary text-xl" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-gray-900 mb-1">Our Location</h3>
+                                            <h3 className="font-bold text-foreground mb-1">Our Location</h3>
                                             <p className="text-gray-600 leading-relaxed">
                                                 123 Green Earth Avenue<br />
                                                 Eco District, NY 10012<br />
@@ -155,7 +155,7 @@ export default function HelpCentrePage() {
                                             <FaEnvelope className="text-primary text-xl" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-gray-900 mb-1">Email Us</h3>
+                                            <h3 className="font-bold text-foreground mb-1">Email Us</h3>
                                             <p className="text-gray-600 mb-1">General: hello@greenblog.com</p>
                                             <p className="text-gray-600">Support: support@greenblog.com</p>
                                         </div>
@@ -165,7 +165,7 @@ export default function HelpCentrePage() {
                                             <FaPhone className="text-primary text-xl" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-gray-900 mb-1">Call Us</h3>
+                                            <h3 className="font-bold text-foreground mb-1">Call Us</h3>
                                             <p className="text-gray-600">+1 (555) 123-4567</p>
                                             <p className="text-gray-500 text-sm mt-1">Mon-Fri: 9am - 6pm EST</p>
                                         </div>
@@ -176,7 +176,7 @@ export default function HelpCentrePage() {
 
                         {/* Form */}
                         <div className="bg-white p-8 md:p-10 rounded-2xl shadow-lg border border-gray-100">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+                            <h2 className="text-2xl font-bold text-foreground mb-6">Send us a Message</h2>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Your Name</label>

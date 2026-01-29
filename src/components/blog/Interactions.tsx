@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { FaComment, FaPaperPlane, FaTrash } from "react-icons/fa";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import LikeButton from "@/components/common/LikeButton";
 import CommentLikeButton from "@/components/blog/CommentLikeButton";
 import LoginPromptModal from "@/components/common/LoginPromptModal";
@@ -121,7 +121,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
             />
 
             <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
                     <FaComment className="text-primary" />
                     Comments ({comments.length})
                 </h3>
@@ -166,7 +166,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
             <div className="space-y-6">
                 <AnimatePresence>
                     {comments.map((comment) => (
-                        <motion.div
+                        <m.div
                             key={comment._id}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -180,7 +180,6 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
                                         alt="User"
                                         fill
                                         className="object-cover"
-                                        unoptimized
                                     />
                                 ) : (
                                     comment.user?.name?.[0] || "?"
@@ -189,7 +188,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
                             <div className="flex-1">
                                 <div className="bg-gray-50 p-4 rounded-xl rounded-tl-none relative group">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="font-bold text-gray-900">{comment.user?.name}</span>
+                                        <span className="font-bold text-foreground">{comment.user?.name}</span>
                                         <div className="flex items-center gap-3">
                                             <span className="text-xs text-gray-400">{new Date(comment.createdAt).toLocaleDateString()}</span>
                                             {session?.user?.id === comment.user?._id && (
@@ -223,7 +222,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
                                     </div>
                                 </div>
                             </div>
-                        </motion.div>
+                        </m.div>
                     ))}
                 </AnimatePresence>
             </div>

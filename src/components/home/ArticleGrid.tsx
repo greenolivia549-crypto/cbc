@@ -1,51 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import LikeButton from "@/components/common/LikeButton";
 import { FaCalendar, FaUser, FaFire, FaClock } from "react-icons/fa";
 
-interface Post {
-    _id: string;
-    title: string;
-    slug: string;
-    excerpt: string;
-    image: string;
-    category: string;
-    createdAt: string;
-    likes?: number;
-    isFavorited?: boolean;
-    author?: {
-        name: string;
-    };
-}
+import { IPost } from "@/types";
 
-export default function ArticleGrid() {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [loading, setLoading] = useState(true);
+export default function ArticleGrid({ initialPosts = [] }: { initialPosts?: IPost[] }) {
+    const [posts, setPosts] = useState<IPost[]>(initialPosts);
     const [activeTab, setActiveTab] = useState<'latest' | 'popular'>('latest');
-
-    useEffect(() => {
-        async function fetchPosts() {
-            try {
-                const res = await fetch("/api/posts");
-                if (res.ok) {
-                    const data = await res.json();
-                    setPosts(data);
-                }
-            } catch {
-                console.error("Failed to fetch posts");
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchPosts();
-    }, []);
-
-    if (loading) {
-        return <div className="text-center py-10 text-gray-500">Loading latest articles...</div>;
-    }
 
     if (posts.length === 0) {
         return <div className="text-center py-10 text-gray-500">No articles published yet.</div>;
@@ -56,7 +21,9 @@ export default function ArticleGrid() {
         if (activeTab === 'latest') {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         } else {
-            return (b.likes || 0) - (a.likes || 0);
+            const likesB = b.likes ?? 0;
+            const likesA = a.likes ?? 0;
+            return likesB - likesA;
         }
     });
 
@@ -81,7 +48,7 @@ export default function ArticleGrid() {
                         }`}
                 >
                     <FaFire />
-                    Most Liked
+                    Popular
                     {activeTab === 'popular' && (
                         <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full" />
                     )}
@@ -89,46 +56,51 @@ export default function ArticleGrid() {
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredPosts.map((article) => (
-                    <article key={article._id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                        <div className="relative h-48 overflow-hidden">
-                            <Image
-                                src={article.image}
-                                alt={article.title}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                unoptimized
-                            />
-                            <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary capitalize">
-                                {article.category}
-                            </div>
-                        </div>
-
-                        <div className="p-5">
-                            <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
-                                <span className="flex items-center gap-1"><FaCalendar /> {new Date(article.createdAt).toLocaleDateString()}</span>
-                                <span>•</span>
-                                <span className="flex items-center gap-1"><FaUser /> {article.author?.name || "Admin"}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {filteredPosts.map((post) => (
+                    <article key={post._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all group">
+                        <Link href={`/blog/${post.slug}`}>
+                            <div className="relative h-48 overflow-hidden">
+                                <Image
+                                    src={post.image}
+                                    alt={post.title}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wide">
+                                    {post.category}
+                                </div>
                             </div>
 
-                            <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                                <Link href={`/blog/${article.slug}`}>
-                                    {article.title}
-                                </Link>
-                            </h3>
+                            <div className="p-6">
+                                <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
+                                    <span className="flex items-center gap-1">
+                                        <FaCalendar className="text-primary/70" />
+                                        {new Date(post.createdAt).toLocaleDateString()}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <FaUser className="text-primary/70" />
+                                        {(typeof post.author === 'object' && post.author?.name) || "Admin"}
+                                    </span>
+                                </div>
 
-                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                                {article.excerpt}
-                            </p>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                                    {post.title}
+                                </h3>
+                                <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                                    {post.excerpt}
+                                </p>
 
-                            <div className="flex items-center justify-between border-t border-gray-50 pt-4">
-                                <LikeButton slug={article.slug} initialLikes={article.likes || 0} initialIsFavorited={article.isFavorited} />
-
-
-
+                                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                                    <span className="text-sm font-bold text-primary group-hover:underline">
+                                        Read Article
+                                    </span>
+                                    {/* Pass likes and isFavorited to LikeButton to avoid initial fetch if possible */}
+                                    {/* LikeButton currently fetches on mount, we can optimize later, but for now passing slug is enough */}
+                                    <LikeButton slug={post.slug} initialLikes={post.likes} initialIsFavorited={post.isFavorited} />
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     </article>
                 ))}
             </div>

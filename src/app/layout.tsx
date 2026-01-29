@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AuthProvider from "@/components/providers/AuthProvider";
+import MotionProvider from "@/components/providers/MotionProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -43,11 +44,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${serifFont.variable} ${sansFont.variable} antialiased bg-background text-foreground`}
       >
         <AuthProvider>
-          <Header />
-          <main className="pt-16 min-h-screen">
-            {children}
-          </main>
-          <Footer />
+          <MotionProvider>
+            <Header />
+            <main className="pt-16 min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </MotionProvider>
         </AuthProvider>
       </body>
     </html>

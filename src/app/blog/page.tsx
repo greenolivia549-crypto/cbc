@@ -1,36 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
-import connectToDatabase from "@/lib/db";
-import Post from "@/models/Post";
-import "@/models/User"; // Ensure User model is registered for population
+
 import { FaCalendar, FaUser } from "react-icons/fa";
 
-interface Post {
-    _id: string;
-    title: string;
-    slug: string;
-    excerpt: string;
-    image: string;
-    category: string;
-    createdAt: string;
-    author?: {
-        name: string;
-    };
-}
+import { IPost } from "@/types";
+import Pagination from "@/components/common/Pagination";
+import { getPosts } from "@/lib/posts";
 
-async function getPosts() {
-    await connectToDatabase();
-    try {
-        const posts = await Post.find({}).sort({ createdAt: -1 }).populate("author", "name");
-        return posts as unknown as Post[];
-    } catch (e) {
-        console.error("Failed to fetch posts:", e);
-        return [];
-    }
-}
+export const revalidate = 60;
 
-export default async function BlogPage() {
-    const posts = await getPosts();
+export default async function BlogPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+    const { page } = await searchParams;
+    const currentPage = parseInt(page || "1");
+
+    const data = await getPosts({ page: currentPage, limit: 9 });
+    const posts = data.posts || [];
+    const pagination = data.pagination;
 
     return (
         <div className="container mx-auto px-4 py-12">
@@ -43,7 +28,7 @@ export default async function BlogPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {posts.length > 0 ? (
-                    posts.map((post: Post) => (
+                    posts.map((post: IPost) => (
                         <article key={post._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all group">
                             <Link href={`/blog/${post.slug}`}>
                                 <div className="relative h-56 overflow-hidden">
@@ -52,7 +37,6 @@ export default async function BlogPage() {
                                         alt={post.title}
                                         fill
                                         className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                        unoptimized
                                     />
                                     <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wide">
                                         {post.category}
@@ -67,7 +51,7 @@ export default async function BlogPage() {
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <FaUser className="text-primary/70" />
-                                            {post.author?.name || "Admin"}
+                                            {(typeof post.author === 'object' && post.author?.name) || "Admin"}
                                         </span>
                                     </div>
 
@@ -92,6 +76,12 @@ export default async function BlogPage() {
                     </div>
                 )}
             </div>
+
+            <Pagination
+                currentPage={currentPage}
+                totalPages={pagination?.totalPages || 0}
+                baseUrl="/blog"
+            />
         </div>
     );
 }

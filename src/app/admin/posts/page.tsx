@@ -4,20 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaPen, FaEye, FaTrash, FaEdit } from "react-icons/fa";
 
-interface Post {
-    _id: string;
-    title: string;
-    slug: string;
-    category: string;
-    author?: {
-        name: string;
-    };
-    authorProfile?: {
-        name: string;
-    };
-    createdAt: string;
-    published: boolean;
-}
+import { IPost } from "@/types";
 
 export default function AdminPostsPage() {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -93,7 +80,7 @@ export default function AdminPostsPage() {
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                         {posts.length > 0 ? (
-                            posts.map((post) => (
+                            posts.map((post: IPost) => (
                                 <tr key={post._id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="font-medium text-gray-900 line-clamp-1">{post.title}</div>
@@ -104,9 +91,7 @@ export default function AdminPostsPage() {
                                             {post.category}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-600">
-                                        {post.authorProfile?.name || post.author?.name || "Admin"}
-                                    </td>
+                                    <td className="px-6 py-4 text-gray-500">{(typeof post.author === 'object' && post.author?.name) || "Admin"}</td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${post.published
                                             ? "bg-green-50 text-green-700"

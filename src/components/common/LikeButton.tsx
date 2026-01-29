@@ -22,8 +22,6 @@ export default function LikeButton({ slug, initialLikes, initialIsFavorited = fa
 
     // If we're on the grid, we might not know the initial status, so we could fetch it.
     // However, for the grid, avoiding N requests is better.
-    // For "Wow" factor with dummy data, we'll rely on the prop or fetch locally if needed.
-    // For now, let's just use the prop.
 
     const handleToggleFavorite = async (e: React.MouseEvent) => {
         e.preventDefault(); // Prevent navigating to the article
