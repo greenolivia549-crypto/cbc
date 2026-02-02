@@ -141,12 +141,12 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
             </div>
 
             {/* Comment Form */}
-            <form onSubmit={handleComment} className="mb-10 bg-gray-50 p-4 rounded-xl">
+            <form onSubmit={handleComment} className="mb-10 bg-gray-50 dark:bg-zinc-900/30 p-4 rounded-xl border border-transparent dark:border-white/5">
                 <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     onClick={() => !session && openLoginModal("Please login to comment on this post")}
-                    className="w-full p-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                    className="w-full p-4 rounded-lg border border-gray-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white dark:bg-zinc-900 text-foreground"
                     placeholder="Share your thoughts..."
                     rows={3}
                 // Remove required so we can handle empty + no session via onClick/onSubmit
@@ -155,7 +155,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-70"
+                        className="px-6 py-2 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:opacity-70 shadow-lg shadow-primary/20"
                     >
                         {loading ? "Posting..." : <><FaPaperPlane size={12} /> Post Comment</>}
                     </button>
@@ -173,7 +173,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="flex gap-4"
                         >
-                            <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-500 font-bold overflow-hidden relative">
+                            <div className="w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full flex-shrink-0 flex items-center justify-center text-gray-500 dark:text-gray-400 font-bold overflow-hidden relative">
                                 {comment.user?.image ? (
                                     <Image
                                         src={comment.user.image}
@@ -186,7 +186,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
                                 )}
                             </div>
                             <div className="flex-1">
-                                <div className="bg-gray-50 p-4 rounded-xl rounded-tl-none relative group">
+                                <div className="bg-gray-50 dark:bg-zinc-900/50 border border-transparent dark:border-white/5 p-4 rounded-xl rounded-tl-none relative group">
                                     <div className="flex items-center justify-between mb-1">
                                         <span className="font-bold text-foreground">{comment.user?.name}</span>
                                         <div className="flex items-center gap-3">
@@ -202,7 +202,7 @@ export default function Interactions({ slug, initialLikes = 0 }: { slug: string;
                                             )}
                                         </div>
                                     </div>
-                                    <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
+                                    <p className="text-gray-700 dark:text-gray-300 text-sm mb-2">{comment.content}</p>
 
                                     <div className="flex items-center gap-4">
                                         {/* Wrapper for Comment Like to intercept click */}

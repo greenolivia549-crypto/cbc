@@ -187,10 +187,10 @@ export default function CreatePostPage() {
         <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                    <Link href="/admin/posts" className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors">
-                        <FaArrowLeft className="text-gray-600" />
+                    <Link href="/admin/posts" className="p-2 bg-white dark:bg-zinc-800 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
+                        <FaArrowLeft className="text-gray-600 dark:text-gray-300" />
                     </Link>
-                    <h1 className="text-3xl font-bold text-gray-900">Create New Post</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Create New Post</h1>
                 </div>
             </div>
 
@@ -200,7 +200,7 @@ export default function CreatePostPage() {
 
                     {/* Left Column: Content */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 space-y-6">
+                        <div className="bg-white dark:bg-zinc-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 space-y-6">
 
                             {error && (
                                 <div className="p-4 bg-red-50 text-red-700 rounded-lg text-sm border border-red-100">
@@ -210,13 +210,13 @@ export default function CreatePostPage() {
 
                             {/* Title */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Post Title</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Post Title</label>
                                 <input
                                     type="text"
                                     name="title"
                                     value={formData.title}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 text-lg border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                    className="w-full px-4 py-3 text-lg border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                     placeholder="Enter article title..."
                                     required
                                 />
@@ -226,7 +226,7 @@ export default function CreatePostPage() {
 
                             {/* Content */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Content (HTML Supported)</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Content (HTML Supported)</label>
 
                                 <div className="mb-2">
                                     <input
@@ -252,7 +252,7 @@ export default function CreatePostPage() {
                                     onClick={(e) => setCursorPosition(e.currentTarget.selectionStart)}
                                     onKeyUp={(e) => setCursorPosition(e.currentTarget.selectionStart)}
                                     rows={15}
-                                    className="w-full px-4 py-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-mono text-sm"
+                                    className="w-full px-4 py-4 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-mono text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200"
                                     placeholder="Write your article content here..."
                                     required
                                 />
@@ -260,19 +260,19 @@ export default function CreatePostPage() {
                         </div>
 
                         {/* SEO Section */}
-                        <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 space-y-6">
-                            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <div className="bg-white dark:bg-zinc-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 space-y-6">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                 <FaSearch className="text-primary" /> SEO Settings
                             </h3>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">SEO Title</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">SEO Title</label>
                                 <input
                                     type="text"
                                     name="seoTitle"
                                     value={formData.seoTitle}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                    className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                     placeholder="Meta Title (Max 60 chars)"
                                     maxLength={60}
                                 />
@@ -280,12 +280,12 @@ export default function CreatePostPage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Meta Description</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Meta Description</label>
                                 <textarea
                                     name="seoDescription"
                                     value={formData.seoDescription}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none"
+                                    className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                     placeholder="Meta Description (Max 160 chars)"
                                     maxLength={160}
                                     rows={3}
@@ -294,13 +294,13 @@ export default function CreatePostPage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Keywords (Comma Separated)</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Keywords (Comma Separated)</label>
                                 <input
                                     type="text"
                                     name="keywords"
                                     value={formData.keywords}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                    className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                     placeholder="e.g. nature, green, sustainability"
                                 />
                             </div>
@@ -309,15 +309,15 @@ export default function CreatePostPage() {
 
                     {/* Right Column: Settings */}
                     <div className="space-y-6">
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
-                            <h3 className="font-bold text-gray-900">Publishing</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 space-y-6">
+                            <h3 className="font-bold text-gray-900 dark:text-white">Publishing</h3>
 
                             <div className="space-y-3">
                                 <button
                                     type="button"
                                     onClick={() => handleSubmit(true)}
                                     disabled={loading}
-                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-900/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg font-bold hover:opacity-90 transition-opacity shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
                                 >
                                     {loading ? "Publishing..." : <><FaSave /> Publish Post</>}
                                 </button>
@@ -325,16 +325,16 @@ export default function CreatePostPage() {
                                     type="button"
                                     onClick={() => handleSubmit(false)}
                                     disabled={loading}
-                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 rounded-lg font-bold hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                                 >
                                     {loading ? "Saving..." : "Save as Draft"}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
-                            <h3 className="font-bold text-gray-900">Visibility</h3>
-                            <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 space-y-4">
+                            <h3 className="font-bold text-gray-900 dark:text-white">Visibility</h3>
+                            <label className="flex items-center gap-3 p-3 border border-gray-200 dark:border-white/10 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
                                 <input
                                     type="checkbox"
                                     name="featured"
@@ -343,24 +343,24 @@ export default function CreatePostPage() {
                                     className="w-5 h-5 text-primary focus:ring-primary border-gray-300 rounded"
                                 />
                                 <div>
-                                    <span className="font-bold text-gray-900 block">Feature this Post</span>
-                                    <span className="text-xs text-gray-500">Show in Home Page Slider</span>
+                                    <span className="font-bold text-gray-900 dark:text-white block">Feature this Post</span>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">Show in Home Page Slider</span>
                                 </div>
                             </label>
                         </div>
 
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
-                            <h3 className="font-bold text-gray-900">Organization</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 space-y-6">
+                            <h3 className="font-bold text-gray-900 dark:text-white">Organization</h3>
 
                             {/* Slug */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Slug</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Slug</label>
                                 <input
                                     type="text"
                                     name="slug"
                                     value={formData.slug}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none bg-gray-50 font-mono text-sm"
+                                    className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white font-mono text-sm"
                                     placeholder="url-slug"
                                     required
                                 />
@@ -368,12 +368,12 @@ export default function CreatePostPage() {
 
                             {/* Category */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Category</label>
                                 <select
                                     name="category"
                                     value={formData.category}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                    className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                     required
                                 >
                                     <option value="" disabled>Select Category</option>
@@ -389,12 +389,12 @@ export default function CreatePostPage() {
 
                             {/* Author */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Author (Optional)</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Author (Optional)</label>
                                 <select
                                     name="authorProfile"
                                     value={formData.authorProfile}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                    className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                 >
                                     <option value="">Default (Admin)</option>
                                     {authors.map(author => (
@@ -404,11 +404,11 @@ export default function CreatePostPage() {
                             </div>
                         </div>
 
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
-                            <h3 className="font-bold text-gray-900">Featured Image</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 space-y-6">
+                            <h3 className="font-bold text-gray-900 dark:text-white">Featured Image</h3>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Image Source</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Image Source</label>
 
                                 {/* Tabs or simple switcher could be here, but let's just show both options or priority to upload */}
                                 <div className="space-y-4">
@@ -424,7 +424,7 @@ export default function CreatePostPage() {
                                         />
                                         <label
                                             htmlFor="imageUpload"
-                                            className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors text-gray-600 hover:text-primary"
+                                            className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gray-50 dark:bg-zinc-800 border-2 border-dashed border-gray-300 dark:border-zinc-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors text-gray-600 dark:text-gray-300 hover:text-primary"
                                         >
                                             {uploading ? (
                                                 <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary"></div>
@@ -442,14 +442,14 @@ export default function CreatePostPage() {
                                         name="image"
                                         value={formData.image}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-sm"
+                                        className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                         placeholder="Paste Image URL..."
                                     />
                                 </div>
                             </div>
 
                             {formData.image && (
-                                <div className="mt-2 aspect-video rounded-lg overflow-hidden bg-gray-100 border border-gray-200 relative group">
+                                <div className="mt-2 aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-white/10 relative group">
                                     <Image src={formData.image} alt="Preview" fill className="object-cover" unoptimized />
                                     <button
                                         type="button"
@@ -464,13 +464,13 @@ export default function CreatePostPage() {
 
                             {/* Excerpt */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Excerpt</label>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Excerpt</label>
                                 <textarea
                                     name="excerpt"
                                     value={formData.excerpt}
                                     onChange={handleChange}
                                     rows={4}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none text-sm"
+                                    className="w-full px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                                     placeholder="Short summary..."
                                 />
                             </div>

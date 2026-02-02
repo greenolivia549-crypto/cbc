@@ -5,6 +5,7 @@ import { FaUserCircle, FaChevronDown, FaSearch } from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/common/ThemeToggle";
 
 interface Category {
     _id: string;
@@ -63,7 +64,7 @@ export default function Header() {
     };
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground shadow-md">
+        <header className="fixed top-0 left-0 right-0 z-50 glass shadow-sm transition-colors duration-300 text-foreground">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 {/* Logo / Brand */}
                 <Link href="/" className="text-2xl font-bold tracking-tight">
@@ -72,11 +73,11 @@ export default function Header() {
 
                 {/* Navigation */}
                 <nav className="hidden md:flex items-center gap-6">
-                    <Link href="/" className="hover:text-green-200 transition-colors">
+                    <Link href="/" className="hover:text-primary transition-colors font-medium">
                         Home
                     </Link>
 
-                    <Link href="/blog" className="hover:text-green-200 transition-colors">
+                    <Link href="/blog" className="hover:text-primary transition-colors font-medium">
                         Latest Blog
                     </Link>
 
@@ -84,7 +85,7 @@ export default function Header() {
                     {/* Categories Dropdown */}
                     <div className="relative group">
                         <button
-                            className="flex items-center gap-1 hover:text-green-200 transition-colors py-4"
+                            className="flex items-center gap-1 hover:text-primary transition-colors py-4 font-medium"
                             onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                             onMouseEnter={() => setIsCategoryOpen(true)}
                         >
@@ -93,7 +94,7 @@ export default function Header() {
 
                         {/* Dropdown Panel */}
                         <div
-                            className="absolute top-full left-0 w-48 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-100 py-2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0"
+                            className="absolute top-full left-0 w-48 bg-white dark:bg-zinc-900 text-gray-800 dark:text-gray-200 rounded-lg shadow-xl border border-gray-100 dark:border-white/10 py-2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0"
                             onMouseEnter={() => setIsCategoryOpen(true)}
                             onMouseLeave={() => setIsCategoryOpen(false)}
                         >
@@ -102,7 +103,7 @@ export default function Header() {
                                     <Link
                                         key={cat._id || cat.slug}
                                         href={`/category/${cat.slug}`}
-                                        className="block px-4 py-2 hover:bg-green-50 hover:text-primary text-sm font-medium"
+                                        className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-primary transition-colors text-sm font-medium"
                                     >
                                         {cat.name}
                                     </Link>
@@ -114,7 +115,7 @@ export default function Header() {
                     </div>
 
 
-                    <Link href="/about" className="hover:text-green-200 transition-colors">
+                    <Link href="/about" className="hover:text-primary transition-colors font-medium">
                         About Us
                     </Link>
 
@@ -131,19 +132,20 @@ export default function Header() {
                             placeholder="Search..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-white/10 border border-white/20 text-white placeholder-green-200 text-sm rounded-full px-4 py-1.5 focus:outline-none focus:bg-white/20 transition-colors w-48 pr-8"
+                            className="bg-zinc-100 dark:bg-zinc-800 text-foreground placeholder:text-gray-500 text-sm rounded-full px-4 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary transition-all w-48 pr-8"
                         />
-                        <button type="submit" className="absolute right-3 text-green-200 hover:text-white transition-colors">
+                        <button type="submit" className="absolute right-3 text-gray-400 hover:text-primary transition-colors">
                             <FaSearch size={14} />
                         </button>
                     </form>
 
                     <div className="flex items-center gap-2">
+                        <ThemeToggle />
                         {session ? (
                             <div className="relative" ref={menuRef}>
                                 <button
                                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-sm font-medium"
                                 >
                                     <FaUserCircle className="text-lg" />
                                     <span className="max-w-[100px] truncate hidden sm:block">{session.user?.name || "User"}</span>
@@ -151,8 +153,8 @@ export default function Header() {
 
                                 {/* Dropdown Menu */}
                                 {isMenuOpen && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-100 py-2 animate-in fade-in slide-in-from-top-2">
-                                        <div className="px-4 py-2 border-b border-gray-100 mb-1">
+                                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 text-gray-800 dark:text-gray-200 rounded-lg shadow-xl border border-gray-100 dark:border-white/10 py-2 animate-in fade-in slide-in-from-top-2">
+                                        <div className="px-4 py-2 border-b border-gray-100 dark:border-white/5 mb-1">
                                             <p className="text-xs text-gray-500">Signed in as</p>
                                             <p className="font-bold truncate text-primary">{session.user?.email}</p>
                                         </div>
@@ -160,7 +162,7 @@ export default function Header() {
                                             <Link
                                                 href="/admin"
                                                 onClick={() => setIsMenuOpen(false)}
-                                                className="block px-4 py-2 hover:bg-green-50 hover:text-primary text-sm"
+                                                className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-primary text-sm"
                                             >
                                                 Admin Dashboard
                                             </Link>
@@ -168,13 +170,13 @@ export default function Header() {
                                         <Link
                                             href="/profile"
                                             onClick={() => setIsMenuOpen(false)}
-                                            className="block px-4 py-2 hover:bg-green-50 hover:text-primary text-sm"
+                                            className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-primary text-sm"
                                         >
                                             Your Profile
                                         </Link>
                                         <button
                                             onClick={() => signOut()}
-                                            className="w-full text-left px-4 py-2 hover:bg-red-50 hover:text-red-600 text-sm"
+                                            className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-colors text-sm"
                                         >
                                             Sign Out
                                         </button>
@@ -184,7 +186,7 @@ export default function Header() {
                         ) : (
                             <Link
                                 href="/auth/signin"
-                                className="px-4 py-1.5 rounded-full bg-white text-primary font-medium hover:bg-green-50 transition-colors text-sm"
+                                className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors text-sm"
                             >
                                 Sign In
                             </Link>

@@ -4,6 +4,13 @@ import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
 import "@/models/User"; // Ensure User model is registered for population
 
+// Basic interface for Mongoose errors to avoid 'any'
+interface MongoError extends Error {
+    code?: number;
+    errors?: Record<string, { message: string }>;
+    path?: string;
+}
+
 export async function POST(req: Request) {
     try {
         const auth = await checkAdminAuth();
@@ -43,26 +50,28 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ message: "Post created successfully", post: newPost }, { status: 201 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Create Post Error:", error);
 
+        const mongoError = error as MongoError;
+
         // Mongoose Validation Error
-        if (error.name === 'ValidationError') {
-            const messages = Object.values(error.errors).map((val: any) => val.message);
+        if (mongoError.name === 'ValidationError' && mongoError.errors) {
+            const messages = Object.values(mongoError.errors).map((val) => val.message);
             return NextResponse.json({ message: messages.join(', ') }, { status: 400 });
         }
 
         // Duplicate Key Error (e.g., Slug)
-        if (error.code === 11000) {
+        if (mongoError.code === 11000) {
             return NextResponse.json({ message: "Duplicate value entered for unique field (likely slug or title)" }, { status: 400 });
         }
 
         // Cast Error (Invalid ID)
-        if (error.name === 'CastError') {
-            return NextResponse.json({ message: `Invalid ID format: ${error.path}` }, { status: 400 });
+        if (mongoError.name === 'CastError') {
+            return NextResponse.json({ message: `Invalid ID format: ${mongoError.path}` }, { status: 400 });
         }
 
-        return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
+        return NextResponse.json({ message: "Internal Server Error", error: mongoError.message }, { status: 500 });
     }
 }
 

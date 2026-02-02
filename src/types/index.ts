@@ -3,6 +3,7 @@ export interface IAuthor {
     name: string;
     email?: string;
     image?: string;
+    bio?: string; // Add bio
 }
 
 export interface ICategory {
@@ -25,7 +26,7 @@ export interface IPost {
         name: string;
         image?: string;
     };
-    authorProfile?: string; // Reference to Author model
+    authorProfile?: IAuthor | string; // Reference to Author model (populated or ID)
     featured: boolean;
     published: boolean;
     seoTitle?: string;

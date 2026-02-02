@@ -38,44 +38,50 @@ export default function AdminMessagesPage() {
     return (
         <div>
             <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">Messages</h1>
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Messages</h1>
                 <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
                     {messages.length} Total
                 </span>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Messages Table */}
+            <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-white/5 overflow-hidden">
                 {messages.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">No messages found.</div>
+                    <div className="p-8 text-center text-gray-500 dark:text-gray-400">No messages found.</div>
                 ) : (
-                    <div className="divide-y divide-gray-100">
-                        {messages.map((msg) => (
-                            <div key={msg._id} className="p-6 hover:bg-gray-50 transition-colors">
-                                <div className="flex items-start justify-between mb-2">
-                                    <div className="flex items-center gap-3">
-                                        <h3 className="font-bold text-gray-900 text-lg">{msg.subject}</h3>
-                                        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                            <FaCalendar size={10} />
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-200 dark:border-white/10">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
+                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</th>
+                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Message</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white dark:bg-zinc-900 divide-y divide-gray-200 dark:divide-white/5">
+                                {messages.map((msg) => (
+                                    <tr key={msg._id} className="hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             {new Date(msg.createdAt).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                    <a
-                                        href={`mailto:${msg.email}`}
-                                        className="text-primary text-sm hover:underline flex items-center gap-1"
-                                    >
-                                        <FaPaperPlane size={12} /> Reply
-                                    </a>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                                    <FaUser size={12} />
-                                    <span className="font-medium">{msg.name}</span>
-                                    <span className="text-gray-400">&lt;{msg.email}&gt;</span>
-                                </div>
-                                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                                    {msg.message}
-                                </p>
-                            </div>
-                        ))}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
+                                            {msg.name}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                            {msg.email}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
+                                            {msg.subject}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate" title={msg.message}>
+                                            {msg.message}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 )}
             </div>

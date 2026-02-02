@@ -11,7 +11,7 @@ export default function SideMenu({ popularPosts = [] }: { popularPosts?: IPost[]
     return (
         <aside className="space-y-8">
             {/* Popular Posts Widget */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-sm border border-zinc-200 dark:border-white/10">
                 <h3 className="flex items-center gap-2 text-xl font-bold text-primary mb-6">
                     <FaFire className="text-orange-500" />
                     Popular Posts
@@ -19,12 +19,12 @@ export default function SideMenu({ popularPosts = [] }: { popularPosts?: IPost[]
                 <ul className="space-y-4">
                     {popularPosts.length > 0 ? (
                         popularPosts.map((post) => (
-                            <li key={post._id}>
+                            <li key={post._id} className="border-b border-zinc-100 dark:border-white/5 last:border-0 pb-3 last:pb-0">
                                 <Link
                                     href={`/blog/${post.slug}`}
                                     className="flex items-center justify-between group"
                                 >
-                                    <span className="text-gray-700 font-medium group-hover:text-primary transition-colors line-clamp-1">
+                                    <span className="text-foreground font-medium group-hover:text-primary transition-colors line-clamp-1">
                                         {post.title}
                                     </span>
                                 </Link>

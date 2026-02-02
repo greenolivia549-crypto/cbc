@@ -52,15 +52,17 @@ export default async function SinglePostPage({
     }
 
     // Determine Author Data (Profile > User > Default)
-    // Note: authorProfile is currently string ID in IPost serializtion.
-    // Ideally we should populate it in getPostBySlug if needed.
-    // For now we use the basic author info or fallback.
-    const authorName = post.author?.name || "Admin";
-    const authorImage = post.author?.image || null;
-    const authorBio = "Passionate about green energy and sustainable living practices."; // Fallback bio since we aren't fetching full profile yet
+    // Check if authorProfile is an object (populated)
+    const hasAuthorProfile = post.authorProfile && typeof post.authorProfile !== 'string';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const profile = hasAuthorProfile ? (post.authorProfile as any) : null;
+
+    const authorName = profile?.name || post.author?.name || "Admin";
+    const authorImage = profile?.image || post.author?.image || null;
+    const authorBio = profile?.bio || "Passionate about green energy and sustainable living practices.";
 
     return (
-        <article className="min-h-screen bg-white pb-20">
+        <article className="min-h-screen bg-white dark:bg-black pb-20 transition-colors duration-300">
             {/* Hero Header */}
             <div className="w-full h-[400px] md:h-[500px] relative">
                 <Image
@@ -75,7 +77,7 @@ export default async function SinglePostPage({
                     <BackButton />
 
                     <div className="flex flex-wrap items-center gap-4 mb-4 text-sm font-medium">
-                        <span className="bg-primary px-3 py-1 rounded-full">{post.category}</span>
+                        <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full">{post.category}</span>
                         <span className="flex items-center gap-2">
                             <FaCalendar />
                             {new Date(post.createdAt).toLocaleDateString()}
@@ -86,7 +88,7 @@ export default async function SinglePostPage({
                         </span>
                     </div>
 
-                    <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4">
+                    <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4 text-white">
                         {post.title}
                     </h1>
 
@@ -103,14 +105,14 @@ export default async function SinglePostPage({
                     {/* Main Article Body */}
                     <div className="lg:w-2/3">
                         <div
-                            className="prose prose-lg prose-green max-w-none text-gray-800"
+                            className="prose prose-lg prose-green dark:prose-invert max-w-none text-gray-800 dark:text-gray-200"
                             dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
                         />
                         {/* Note: In a real app, use a markdown renderer like 'react-markdown' instead of dangerous HTML */}
 
                         {/* Tags / Interactions placeholder */}
-                        <div className="mt-12 pt-8 border-t border-gray-100">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">Share this article</h3>
+                        <div className="mt-12 pt-8 border-t border-gray-100 dark:border-white/10">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Share this article</h3>
                             <div className="flex gap-4">
                                 <ShareButton
                                     title={post.title}
@@ -125,10 +127,10 @@ export default async function SinglePostPage({
                     {/* Sidebar */}
                     <aside className="lg:w-1/3 space-y-8">
                         {/* Author Box */}
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">About the Author</h3>
+                        <div className="bg-gray-50 dark:bg-zinc-900 p-6 rounded-xl border border-gray-100 dark:border-white/10">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">About the Author</h3>
                             <div className="flex items-center gap-4 mb-4">
-                                <div className="w-12 h-12 rounded-full overflow-hidden relative border border-gray-200 bg-white">
+                                <div className="w-12 h-12 rounded-full overflow-hidden relative border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
                                     {authorImage ? (
                                         <Image src={authorImage} alt={authorName} fill className="object-cover" />
                                     ) : (
@@ -138,11 +140,11 @@ export default async function SinglePostPage({
                                     )}
                                 </div>
                                 <div>
-                                    <p className="font-bold text-gray-900">{authorName}</p>
-                                    <p className="text-xs text-gray-500">Content Creator</p>
+                                    <p className="font-bold text-gray-900 dark:text-white">{authorName}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">Content Creator</p>
                                 </div>
                             </div>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                                 {authorBio}
                             </p>
                         </div>

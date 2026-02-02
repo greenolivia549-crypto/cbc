@@ -108,9 +108,9 @@ export default function CreatePost() {
 
             router.push("/admin");
             router.refresh();
-        } catch (error: any) {
+        } catch (error) {
             console.error(error);
-            alert(error.message || "Something went wrong");
+            alert((error as Error).message || "Something went wrong");
         } finally {
             setLoading(false);
         }

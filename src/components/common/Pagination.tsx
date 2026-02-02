@@ -19,61 +19,69 @@ export default function Pagination({ currentPage, totalPages, baseUrl }: Paginat
         return `${baseUrl}?${params.toString()}`;
     };
 
+    const getPageNumbers = () => {
+        const pageNumbers: (number | string)[] = [];
+        const delta = 1; // Number of pages to show around the current page
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (
+                i === 1 ||
+                i === totalPages ||
+                (i >= currentPage - delta && i <= currentPage + delta)
+            ) {
+                pageNumbers.push(i);
+            } else if (
+                (i === currentPage - delta - 1 && currentPage - delta > 1) ||
+                (i === currentPage + delta + 1 && currentPage + delta < totalPages)
+            ) {
+                pageNumbers.push("...");
+            }
+        }
+        return pageNumbers;
+    };
+
     if (totalPages <= 1) return null;
 
     return (
         <div className="flex justify-center items-center gap-2 mt-12">
             {/* Previous Button */}
             <Link
-                href={createPageUrl(currentPage - 1)}
-                className={`p-3 rounded-lg border border-gray-200 transition-colors ${currentPage <= 1
-                    ? "text-gray-300 pointer-events-none bg-gray-50"
-                    : "text-gray-600 hover:bg-primary hover:text-white hover:border-primary"
+                href={currentPage > 1 ? createPageUrl(currentPage - 1) : "#"}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${currentPage <= 1
+                    ? "text-gray-300 dark:text-gray-600 pointer-events-none bg-gray-50 dark:bg-white/5"
+                    : "text-foreground hover:bg-gray-100 dark:hover:bg-white/10 hover:text-primary"
                     }`}
                 aria-disabled={currentPage <= 1}
             >
-                <FaChevronLeft />
+                <FaChevronLeft size={12} /> Previous
             </Link>
 
             {/* Page Numbers */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                // Show first, last, current, and neighbors
-                if (
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 1 && page <= currentPage + 1)
-                ) {
-                    return (
+            <div className="flex items-center gap-2">
+                {getPageNumbers().map((page, index) => (
+                    page === "..." ? (
+                        <span key={`ellipsis-${index}`} className="px-3 py-1 text-gray-400">...</span>
+                    ) : (
                         <Link
                             key={page}
-                            href={createPageUrl(page)}
-                            className={`w-10 h-10 flex items-center justify-center rounded-lg border transition-colors font-medium ${currentPage === page
-                                ? "bg-primary text-white border-primary"
-                                : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                            href={createPageUrl(page as number)}
+                            className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold transition-all ${currentPage === page
+                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                                : "border border-gray-200 dark:border-white/10 text-foreground hover:bg-gray-50 dark:hover:bg-white/5"
                                 }`}
                         >
                             {page}
                         </Link>
-                    );
-                }
-
-                // Show ellipsis
-                if (
-                    page === currentPage - 2 ||
-                    page === currentPage + 2
-                ) {
-                    return <span key={page} className="text-gray-400">...</span>;
-                }
-
-                return null;
-            })}
+                    )
+                ))}
+            </div>
 
             {/* Next Button */}
             <Link
-                href={createPageUrl(currentPage + 1)}
-                className={`p-3 rounded-lg border border-gray-200 transition-colors ${currentPage >= totalPages
-                    ? "text-gray-300 pointer-events-none bg-gray-50"
-                    : "text-gray-600 hover:bg-primary hover:text-white hover:border-primary"
+                href={currentPage < totalPages ? createPageUrl(currentPage + 1) : "#"}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${currentPage >= totalPages
+                    ? "text-gray-300 dark:text-gray-600 pointer-events-none bg-gray-50 dark:bg-white/5"
+                    : "text-foreground hover:bg-gray-100 dark:hover:bg-white/10 hover:text-primary"
                     }`}
                 aria-disabled={currentPage >= totalPages}
             >

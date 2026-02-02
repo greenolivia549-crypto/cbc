@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaCalendar, FaUser, FaTag } from "react-icons/fa";
 import BackButton from "@/components/common/BackButton";
+import ArticleCard from "@/components/common/ArticleCard";
 
 export default async function CategoryPage({
     params,
@@ -25,13 +26,13 @@ export default async function CategoryPage({
         posts = await Post.find({
             category: { $regex: new RegExp(`^${categoryDoc.name}$`, "i") },
             published: true
-        }).sort({ createdAt: -1 });
+        }).sort({ createdAt: -1 }).populate("author", "name").populate("authorProfile");
     } else {
         // Fallback: search by slug directly if for some reason category doc doesn't exist but posts use the slug (unlikely but safe)
         posts = await Post.find({
             category: { $regex: new RegExp(`^${slug}$`, "i") },
             published: true
-        }).sort({ createdAt: -1 });
+        }).sort({ createdAt: -1 }).populate("author", "name").populate("authorProfile");
     }
 
     return (
@@ -50,47 +51,7 @@ export default async function CategoryPage({
                 {posts.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {posts.map((post) => (
-                            <article key={post._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all group">
-                                <Link href={`/blog/${post.slug}`}>
-                                    <div className="relative h-56 overflow-hidden">
-                                        <Image
-                                            src={post.image}
-                                            alt={post.title}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
-                                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wide flex items-center gap-1">
-                                            <FaTag size={10} />
-                                            {post.category}
-                                        </div>
-                                    </div>
-
-                                    <div className="p-6">
-                                        <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
-                                            <span className="flex items-center gap-1">
-                                                <FaCalendar className="text-primary/70" />
-                                                {new Date(post.createdAt).toLocaleDateString()}
-                                            </span>
-                                            <span className="flex items-center gap-1">
-                                                <FaUser className="text-primary/70" />
-                                                {post.author?.name}
-                                            </span>
-                                        </div>
-
-                                        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                                            {post.title}
-                                        </h3>
-
-                                        <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-                                            {post.excerpt}
-                                        </p>
-
-                                        <span className="inline-block text-primary font-bold text-sm hover:underline">
-                                            Read Article →
-                                        </span>
-                                    </div>
-                                </Link>
-                            </article>
+                            <ArticleCard key={post._id} post={post} />
                         ))}
                     </div>
                 ) : (

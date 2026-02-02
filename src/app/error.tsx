@@ -22,7 +22,7 @@ export default function Error({
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-2">Something went wrong!</h2>
             <p className="text-gray-500 max-w-md mb-8">
-                We're sorry, but we encountered an unexpected error. Please try again later.
+                We&apos;re sorry, but we encountered an unexpected error. Please try again later.
             </p>
             <button
                 onClick={

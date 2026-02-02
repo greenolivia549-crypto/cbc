@@ -1,6 +1,8 @@
 import connectToDatabase from "@/lib/db";
 import Post from "@/models/Post";
-import User from "@/models/User";
+import "@/models/Author"; // Ensure Author model is registered
+import "@/models/User";   // Ensure User model is registered
+
 import { IPost } from "@/types";
 import { cache } from "react";
 
@@ -44,6 +46,7 @@ export async function getPosts(options: {
         endDate
     } = options;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const query: any = { published: true };
 
     if (featured) query.featured = true;
@@ -68,9 +71,11 @@ export async function getPosts(options: {
     const [posts, total] = await Promise.all([
         Post.find(query)
             .sort({ createdAt: -1 })
+            .select("-content -likedBy")
             .skip(skip)
             .limit(limit)
             .populate("author", "name")
+            .populate("authorProfile")
             .lean(),
         Post.countDocuments(query)
     ]);
@@ -96,8 +101,11 @@ export async function getPopularPosts(limit: number = 5): Promise<IPost[]> {
 
     const posts = await Post.find({ published: true })
         .sort({ likes: -1 })
+        .select("-content -likedBy")
+        .limit(limit)
         .limit(limit)
         .populate("author", "name")
+        .populate("authorProfile")
         .lean();
 
     return posts.map(serializePost);
@@ -111,8 +119,11 @@ export async function getFeaturedPosts(limit: number = 5): Promise<IPost[]> {
 
     const posts = await Post.find({ published: true, featured: true })
         .sort({ createdAt: -1 })
+        .select("-content -likedBy")
+        .limit(limit)
         .limit(limit)
         .populate("author", "name")
+        .populate("authorProfile")
         .lean();
 
     return posts.map(serializePost);
@@ -126,6 +137,7 @@ export const getPostBySlug = cache(async (slug: string): Promise<IPost | null> =
 
     const post = await Post.findOne({ slug, published: true })
         .populate("author", "name")
+        .populate("authorProfile")
         .lean();
 
     if (!post) return null;
@@ -136,6 +148,7 @@ export const getPostBySlug = cache(async (slug: string): Promise<IPost | null> =
 /**
  * Helper to serialize MongoDB objects
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function serializePost(post: any): IPost {
     return {
         _id: post._id.toString(),
@@ -150,14 +163,21 @@ function serializePost(post: any): IPost {
             _id: post.author._id ? post.author._id.toString() : undefined,
             image: post.author.image,
         } : { name: "Admin" },
-        authorProfile: post.authorProfile ? post.authorProfile.toString() : undefined,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        authorProfile: post.authorProfile ? (post.authorProfile as any).name ? {
+            _id: (post.authorProfile as any)._id.toString(),
+            name: (post.authorProfile as any).name,
+            bio: (post.authorProfile as any).bio,
+            image: (post.authorProfile as any).image,
+            email: (post.authorProfile as any).email
+        } : post.authorProfile.toString() : undefined,
         featured: post.featured,
         published: post.published,
         seoTitle: post.seoTitle,
         seoDescription: post.seoDescription,
         keywords: post.keywords,
         likes: post.likes || 0,
-        likedBy: post.likedBy ? post.likedBy.map((id: any) => id.toString()) : [],
+        likedBy: post.likedBy ? post.likedBy.map((id: string | { toString: () => string }) => id.toString()) : [],
         createdAt: post.createdAt instanceof Date ? post.createdAt.toISOString() : post.createdAt,
         updatedAt: post.updatedAt instanceof Date ? post.updatedAt.toISOString() : post.updatedAt,
         isFavorited: post.isFavorited

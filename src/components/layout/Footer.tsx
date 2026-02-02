@@ -32,13 +32,13 @@ export default function Footer() {
     }, []);
 
     return (
-        <footer className="bg-primary text-white pt-16 pb-8">
+        <footer className="bg-zinc-900 dark:bg-black text-white pt-16 pb-8 border-t border-zinc-800">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                     {/* Brand Column */}
                     <div className="space-y-4">
                         <h2 className="text-2xl font-bold">GreenBlog</h2>
-                        <p className="text-green-100 text-sm leading-relaxed">
+                        <p className="text-gray-400 text-sm leading-relaxed">
                             A professional platform dedicated to sustainable living, green technology, and modern eco-friendly lifestyles.
                         </p>
                         <div className="flex gap-4">
@@ -57,7 +57,7 @@ export default function Footer() {
                     {/* Quick Links */}
                     <div>
                         <h3 className="text-lg font-bold mb-6">Quick Links</h3>
-                        <ul className="space-y-3 text-sm text-green-100">
+                        <ul className="space-y-3 text-sm text-gray-400">
                             <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
                             <li><Link href="/blog" className="hover:text-white transition-colors">Latest Articles</Link></li>
                             <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
@@ -69,7 +69,7 @@ export default function Footer() {
                     {/* Categories */}
                     <div>
                         <h3 className="text-lg font-bold mb-6">Popular Categories</h3>
-                        <ul className="space-y-3 text-sm text-green-100">
+                        <ul className="space-y-3 text-sm text-gray-400">
                             {categories.length > 0 ? (
                                 categories.slice(0, 6).map((cat) => (
                                     <li key={cat._id || cat.slug}>
@@ -87,7 +87,7 @@ export default function Footer() {
 
                 </div>
 
-                <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-green-200">
+                <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
                     <p>© 2026 GreenBlog. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>

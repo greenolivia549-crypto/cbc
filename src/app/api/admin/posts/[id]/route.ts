@@ -65,7 +65,7 @@ export async function PUT(
                 keywords,
                 featured,
                 published,
-                authorProfile
+                authorProfile: authorProfile || null
             },
             { new: true }
         );

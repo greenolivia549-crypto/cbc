@@ -13,6 +13,7 @@ async function getData(q: string | undefined, category: string | undefined, star
     // Fetch Categories and serialize matches
     // Fetch Categories and serialize matches
     const rawCategories = await Category.find({}).lean();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const categories: ICategory[] = rawCategories.map((cat: any) => ({
         ...cat,
         _id: cat._id.toString()
@@ -22,6 +23,7 @@ async function getData(q: string | undefined, category: string | undefined, star
         return { posts: [], categories };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const query: any = { published: true };
     if (category && category !== "all") {
         query.category = category;
@@ -42,7 +44,7 @@ async function getData(q: string | undefined, category: string | undefined, star
     }
 
     // Explicitly type and lean() query
-    const posts = await Post.find(query).sort({ createdAt: -1 }).populate("author", "name").lean();
+    const posts = await Post.find(query).sort({ createdAt: -1 }).populate("author", "name").populate("authorProfile").lean();
 
     // Serialize for Server Component (Mongoose docs aren't plain objects otherwise)
     const serializedPosts = posts.map(post => ({
@@ -50,7 +52,10 @@ async function getData(q: string | undefined, category: string | undefined, star
         _id: (post._id as { toString: () => string }).toString(),
         createdAt: new Date(post.createdAt).toISOString(),
         updatedAt: new Date(post.updatedAt).toISOString(),
-        author: post.author ? { name: (post.author as any).name } : undefined
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        author: post.author ? { name: (post.author as any).name } : undefined,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        authorProfile: post.authorProfile ? { name: (post.authorProfile as any).name } : undefined
     }));
 
     return { posts: serializedPosts as unknown as IPost[], categories };
@@ -169,7 +174,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                                     <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-50">
                                         <div className="flex items-center gap-2">
                                             <FaUser className="text-primary/60" />
-                                            <span>{(typeof post.author === 'object' && post.author?.name) || "Admin"}</span>
+                                            <span>{(typeof post.authorProfile === 'object' && (post.authorProfile as any).name) || (typeof post.author === 'object' && post.author?.name) || "Admin"}</span>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <FaCalendar className="text-primary/60" />

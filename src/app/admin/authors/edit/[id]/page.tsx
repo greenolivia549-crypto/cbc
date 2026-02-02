@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft, FaSave } from "react-icons/fa";
 
-export default function EditAuthorPage({ params }: { params: { id: string } }) {
+export default function EditAuthorPage() {
     const router = useRouter();
+    const { id } = useParams() as { id: string };
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ export default function EditAuthorPage({ params }: { params: { id: string } }) {
     useEffect(() => {
         const fetchAuthor = async () => {
             try {
-                const res = await fetch(`/api/admin/authors/${params.id}`);
+                const res = await fetch(`/api/admin/authors/${id}`);
                 if (res.ok) {
                     const data = await res.json();
                     setFormData({
@@ -46,7 +47,7 @@ export default function EditAuthorPage({ params }: { params: { id: string } }) {
         };
 
         fetchAuthor();
-    }, [params.id, router]);
+    }, [id, router]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -58,7 +59,7 @@ export default function EditAuthorPage({ params }: { params: { id: string } }) {
         setLoading(true);
 
         try {
-            const res = await fetch(`/api/admin/authors/${params.id}`, {
+            const res = await fetch(`/api/admin/authors/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

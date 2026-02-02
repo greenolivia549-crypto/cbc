@@ -48,11 +48,11 @@ export default function AdminLayout({
     ];
 
     return (
-        <div className="min-h-screen bg-gray-100 flex">
+        <div className="min-h-screen bg-gray-100 dark:bg-black flex transition-colors">
             {/* Sidebar */}
-            <aside className="w-64 bg-gray-900 text-white fixed h-full hidden md:block z-10">
+            <aside className="w-64 bg-zinc-900 text-white fixed h-full hidden md:block z-10 border-r border-gray-800">
                 <div className="p-6 border-b border-gray-800">
-                    <h2 className="text-2xl font-bold text-green-400">Admin Panel</h2>
+                    <h2 className="text-2xl font-bold text-white">Admin Panel</h2>
                     <p className="text-xs text-gray-400 mt-1">Manage GreenBlog</p>
                 </div>
 
@@ -61,7 +61,7 @@ export default function AdminLayout({
                         <Link
                             key={item.href}
                             href={item.href}
-                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-zinc-800 text-gray-300 hover:text-white transition-colors"
                         >
                             <item.icon />
                             {item.name}
